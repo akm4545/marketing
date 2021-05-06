@@ -58,7 +58,7 @@
         }
         
         .search {
-        	padding:0em 1em;
+        	padding:0em 0.5em;
         	position:absolute;
         	z-index:800;
         	display: flex;
@@ -83,6 +83,9 @@
         	color: white;
         	border: 0px;
         	height: 2.5em;
+        	width: 13em;
+        	margin-right: 1em;
+        	padding-left: 1em;
         }
         
         .search input[type=radio] {
@@ -112,8 +115,18 @@
         	background-color: rgba(255,255,255,0.1);
         	display: inline-block;
         	border-radius: 2em;
-        	width: 8em;
-        	height: 70%;
+        	width: 9em;
+        	height: 80%;
+        	margin-right: 0.5em;
+        }
+        
+        .search_radio li {
+        	width: 4em;
+        	text-align: center;
+        	height: 2.5em;
+        	display: flex;
+		    justify-content: center;
+		    align-items: center;
         }
         
         .box {
@@ -131,21 +144,32 @@
         
         .box strong {
         	clear: both;
+        	margin-bottom: 1em;
         }
         
         .box input[type=button] {
         	border-radius: 2em;
+        	color:white;
         	width: 20em;
-        	font-size: 0.8em;
+        	font-size: 1em;
         	border: 0px;
-        	background-color: #EDF0F4;
-        	height: 3em;
+        	background-color: #D2D5DA;
+        	height: 3.5em;
+        	margin-top: 1em;
+        }
+        
+        .box h4{
+        	font-size: 1.2em;
+        	margin-bottom: 1em;
         }
         
         .box_gray {
        		background-color: #EDF0F4;
-       		display: block;
+       		display: flex;
+       		align-items: center;
        		height: 3em;
+       		padding-left: 1.5em;
+       		border-radius: 0.5em;
         }
         
         strong {
@@ -153,7 +177,7 @@
         }
         
         .map_wrap {
-        	top: -40em;
+        	top: -48em;
         }
         
         .map_search {
@@ -265,6 +289,27 @@
         	background:linear-gradient(#425470, #5b6d8a);
         }
         
+        .location{
+        	display:flex;
+        	align-items: center;
+        	justify-content: center;
+        	position: absolute;
+        	top:2em;
+        	background-color: #000;
+        	z-index: 800;
+        	left: 45%;
+        	height: 4em;
+        	border-radius: 2em;
+        	color: white;
+        	width: 25em;
+        }
+        
+        .location span{
+        	display:block;
+        	color: white;
+        	font-size: 2em;
+        }
+        
 		/* 카카오 api */
         .map_wrap {position:relative;overflow:hidden;width:100%;height:700px;}
 		.radius_border{border:1px solid #919191;border-radius:5px;}     
@@ -280,6 +325,7 @@
 		.custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none;}             
 		.custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}            
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/b494d45b9b.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -400,13 +446,16 @@
    				지도에서 위치를 선택하세요.
    			</strong>
    			<div class="box_gray">위치 선택</div>
-   			<input type="button" value="분석하기"/>
+   			<input type="button" id="marketing_search" value="분석하기"/>
     	</div>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
 		<div class="map_wrap">
     		<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div> 
     		<!-- 지도타입 컨트롤 div 입니다 -->
+    		<div class="location">
+    			<span id="centerAddr"></span>
+    		</div>
     		<div class="map_search">
 	    		<input type="text" id="juso" placeholder="주소로 검색하세요."/>
 	    		<input type="button" class="selected_btn" id="juso_btn" value="검색"/>
@@ -422,7 +471,7 @@
     		</div>
 		</div>
     </div>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7de00601de043a9aec7c057e4dd0afe6"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7de00601de043a9aec7c057e4dd0afe6&libraries=services"></script>
 	<script>
 		var infowindow = new kakao.maps.InfoWindow({zIndex:1}); // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 	
@@ -439,18 +488,18 @@
 		// 지도에 마커를 표시하는 함수입니다
 		function displayMarker(place) {
 		    
-		    // 마커를 생성하고 지도에 표시합니다
-		    var marker = new kakao.maps.Marker({
-		        map: map,
-		        position: new kakao.maps.LatLng(place.y, place.x) 
-		    });
+	    // 마커를 생성하고 지도에 표시합니다
+	    var marker = new kakao.maps.Marker({
+	        map: map,
+	        position: new kakao.maps.LatLng(place.y, place.x) 
+	    });
 
-		    // 마커에 클릭이벤트를 등록합니다
-		    kakao.maps.event.addListener(marker, 'click', function() {
+		// 마커에 클릭이벤트를 등록합니다
+	    kakao.maps.event.addListener(marker, 'click', function() {
 		        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
 		        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
 		        infowindow.open(map, marker);
-		    });
+	    	});
 		}
 		
 		map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
@@ -484,7 +533,72 @@
 
 		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
 		        map.setBounds(bounds);
+		    }else{
+		    	alert("검색 결과가 없습니다");
 		    } 
+		}		
+
+		// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
+		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+		    searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+		        if (status === kakao.maps.services.Status.OK) {
+		            var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+		            detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+		            
+		            var content = '<div class="bAddr">' +
+		                            '<span class="title">법정동 주소정보</span>' + 
+		                            detailAddr + 
+		                        '</div>';
+
+		            // 마커를 클릭한 위치에 표시합니다 
+		            marker.setPosition(mouseEvent.latLng);
+		            marker.setMap(map);
+
+		            // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+		            infowindow.setContent(content);
+		            infowindow.open(map, marker);
+		        }   
+		    });
+		});
+
+		// 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+		kakao.maps.event.addListener(map, 'idle', function() {
+		    searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+		});
+		
+		// 주소-좌표 변환 객체를 생성합니다
+		var geocoder = new kakao.maps.services.Geocoder();
+
+		var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
+		    infowindow = new kakao.maps.InfoWindow({zindex:1}); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+		
+
+		function searchAddrFromCoords(coords, callback) {
+		    // 좌표로 행정동 주소 정보를 요청합니다
+		    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
+		}
+	
+		function searchDetailAddrFromCoords(coords, callback) {
+		    // 좌표로 법정동 상세 주소 정보를 요청합니다
+		    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+		}
+		
+		// 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+		searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
+		// 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+		function displayCenterInfo(result, status) {
+		    if (status === kakao.maps.services.Status.OK) {
+		        var infoDiv = document.getElementById('centerAddr');
+
+		        for(var i = 0; i < result.length; i++) {
+		            // 행정동의 region_type 값은 'H' 이므로
+		            if (result[i].region_type === 'H') {
+		                infoDiv.innerHTML = result[i].address_name;
+		                break;
+		            }
+		        }
+		    }    
 		}
 
 		// 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
@@ -506,6 +620,23 @@
 		}
 		
 		jusoBtn.addEventListener("click", jusoFuc);
+		
+		let marketing = document.getElementById("marketing_search");
+		
+		let searchFuc = () => {
+			$.ajax({
+				url:"<c:url value='/search'/>",
+				type:"get",
+				data:{
+					
+				},
+				success:function(data){
+					alert(data);
+				}
+			});
+		}
+		
+		marketing.addEventListener("click", searchFuc);
     </script>
 </body>
 </html>

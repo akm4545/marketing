@@ -54,7 +54,7 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
  *  Copyright (C) by MOPAS All right reserved.
  */
 
-@Controller
+/* @Controller */
 public class EgovSampleController {
 
 	/** EgovSampleService */
