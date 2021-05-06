@@ -624,11 +624,12 @@
 		let marketing = document.getElementById("marketing_search");
 		
 		let searchFuc = () => {
+			centerAddr = document.getElementById("centerAddr").innerText;
 			$.ajax({
 				url:"<c:url value='/search'/>",
 				type:"get",
 				data:{
-					
+					key : centerAddr
 				},
 				success:function(data){
 					alert(data);
