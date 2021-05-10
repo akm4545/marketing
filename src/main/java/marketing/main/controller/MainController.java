@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysql.fabric.xmlrpc.base.Array;
 
@@ -24,10 +25,8 @@ public class MainController{
 	MainServiceImpl hangjungCodeService;
 	
 	@ResponseBody
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public JsonObject search(String key) throws Exception {
-		StoreVO storeVO = new StoreVO();
-		
+	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/text; charset=utf8")
+	public String search(String key) throws Exception {
 		String jusoCodeNum = ""; //주소 코드
 		
 		String[] jusoArr = key.split(" ");
@@ -47,11 +46,10 @@ public class MainController{
 		for(int i=0; i<juso.size(); i++) {
 			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
 		}
-		try {
-			System.out.println("최종 반환 json" + hangjungCodeService.storeListInDong(jusoCodeNum).toString());			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		System.out.println();
+		//List<StoreVO> storeVOS = hangjungCodeService.storeListInDong(jusoCodeNum);
+		//System.out.println("최종 반환 json" + storeVOS.toString());
+		
+		return hangjungCodeService.storeListInDong(jusoCodeNum).toString();
 	}
 }

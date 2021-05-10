@@ -680,12 +680,20 @@
 			centerAddr = document.getElementById("centerAddr").innerText;
 			$.ajax({
 				url:"<c:url value='/search'/>",
-				type:"get",
+				type:"post",
+				dataType:"json",
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 				data:{
 					key : centerAddr
 				},
-				success:function(data){
-					alert(data);
+				success:function(data, textStatus){
+					alert(textStatus);
+					alert(JSON.stringify(data));
+				},
+				error:function(data, textStatus, errorThrown){
+					alert(textStatus);
+					alert(errorThrown);
+					alert("실패" + data);
 				}
 			});
 		}

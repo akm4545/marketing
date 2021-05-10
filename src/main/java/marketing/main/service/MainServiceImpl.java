@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import marketing.main.vo.StoreVO;
 
 @Service("hangjungCodeService")
 public class MainServiceImpl implements MainService{
-	
 	JsonObject jusoJSON;
 	boolean keyItrSw = true; //재귀함수 종료 스위치
 	String jusoCode = ""; //주소 코드 분류
@@ -101,7 +101,7 @@ public class MainServiceImpl implements MainService{
 	
 	//최종 주소로 상권조회
 	@Override
-	public JsonObject storeListInDong(String jusoCodeNum) throws Exception{
+	public JsonArray storeListInDong(String jusoCodeNum) throws Exception{
 		//yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D 서비스키
 		//필요 응답 메세지 항목
 		//bizesNm 상호명, indsSclsNm 상권업종 대분류명, InoAdr 지번주소, lon 경도, lat 위도  
@@ -143,16 +143,16 @@ public class MainServiceImpl implements MainService{
         conn.disconnect();
         System.out.println(sb.toString());
         
-        Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
         JsonObject storeJson = new Gson().fromJson(sb.toString(), JsonObject.class);
         
         //재귀함수 안쓰고 고정 깊이를 가진 Jons객체에서 꺼내오기
         storeJson = (JsonObject) storeJson.get("body");
         JsonArray storeJsonArr = (JsonArray) storeJson.get("items");
         
-        System.out.println("테스트 " + storeJsonArr.toString());
+        Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
+        List<StoreVO> storeVOS = new Gson().fromJson(storeJsonArr.toString(), type);
         
-        return null;
+        return storeJsonArr;
 	}
 	
 	public JsonObject recurseKeys(JsonObject jObj, String findKey, String findValue) throws Exception {
