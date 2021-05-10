@@ -112,7 +112,7 @@ public class MainServiceImpl implements MainService{
         urlBuilder.append("&" + URLEncoder.encode("ServiceKey","UTF-8") + "=yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + URLEncoder.encode("yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*한 페이지 결과 수*/
         
         URL url = new URL(urlBuilder.toString());
@@ -141,7 +141,7 @@ public class MainServiceImpl implements MainService{
         
         rd.close();
         conn.disconnect();
-        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
         
         JsonObject storeJson = new Gson().fromJson(sb.toString(), JsonObject.class);
         
@@ -149,8 +149,8 @@ public class MainServiceImpl implements MainService{
         storeJson = (JsonObject) storeJson.get("body");
         JsonArray storeJsonArr = (JsonArray) storeJson.get("items");
         
-        Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
-        List<StoreVO> storeVOS = new Gson().fromJson(storeJsonArr.toString(), type);
+        //Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
+        //List<StoreVO> storeVOS = new Gson().fromJson(storeJsonArr.toString(), type);
         
         return storeJsonArr;
 	}
@@ -159,7 +159,7 @@ public class MainServiceImpl implements MainService{
 		jObj = (JsonObject) jObj.get("body");
         JsonArray storeJsonArr = (JsonArray) jObj.get("items");
         
-        System.out.println(findKey);
+        //System.out.println(findKey);
         for(int i=0; i<storeJsonArr.size(); i++) {
         	JsonObject itemJson = (JsonObject) storeJsonArr.get(i);
         	

@@ -611,6 +611,16 @@
 		    map.setLevel(map.getLevel() + 1);
 		}
 		
+		// 지도에 표시된 마커 객체를 가지고 있을 배열입니다
+		var markers = [];
+		
+		// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
+		function setMarkers(map) {
+		    for (var i = 0; i < markers.length; i++) {
+		        markers[i].setMap(null);
+		    }            
+		}
+		
 		let jusoBtn = document.getElementById("juso_btn");
 		
 		let jusoFuc = () => {
@@ -634,7 +644,11 @@
 					key : centerAddr
 				},
 				success:function(data, textStatus){
-					var positions = [];
+					var positions = [];					
+
+					setMarkers(map);
+					
+					markers = [];
 					
 					for(key in data) {
 					    //alert(data[key].bizesNm);
@@ -657,6 +671,8 @@
 					        map: map, // 마커를 표시할 지도
 					        position: positions[i].latlng // 마커의 위치
 					    });
+					    
+					    markers.push(marker);
 
 					    // 마커에 표시할 인포윈도우를 생성합니다 
 					    var infowindow = new kakao.maps.InfoWindow({
