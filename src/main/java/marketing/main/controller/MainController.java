@@ -11,19 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.JsonObject;
 import com.mysql.fabric.xmlrpc.base.Array;
 
-import marketing.main.service.MainService;
+import marketing.main.service.MainServiceImpl;
+import marketing.main.vo.StoreVO;
 
 @Controller
-public class MainController {	
+public class MainController{	
 	
 	@Resource(name = "hangjungCodeService")
-	MainService hangjungCodeService;
+	MainServiceImpl hangjungCodeService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public void search(String key) throws Exception {
+	public JsonObject search(String key) throws Exception {
+		StoreVO storeVO = new StoreVO();
+		
 		String jusoCodeNum = ""; //주소 코드
 		
 		String[] jusoArr = key.split(" ");
@@ -32,7 +36,7 @@ public class MainController {
 		 * Title : 주소 배열 변수명 변경
 		 * Type:
 		 * Message : 주소 배열 변수명을 josuArr 에서 jusoArr 로 변경
-		 * author: 조찬기
+		 * Author: 조찬기
 		 */
 		for(int i=0; i<jusoArr.length; i++) {
 			jusoArr[i] = jusoArr[i].replace(" ", "");
@@ -40,11 +44,14 @@ public class MainController {
 		
 		List<String> juso = new ArrayList<>(Arrays.asList(jusoArr));
 		
-		System.out.println(juso.toString());
-		System.out.println(key);
-		
 		for(int i=0; i<juso.size(); i++) {
-			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //시 코드 조회
+			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
 		}
+		try {
+			System.out.println("최종 반환 json" + hangjungCodeService.storeListInDong(jusoCodeNum).toString());			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
