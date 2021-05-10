@@ -76,7 +76,7 @@
         	margin-top: 30px;
         }
         
-        .search li {
+        li {
         	float: left;
         }
         
@@ -91,7 +91,7 @@
         	padding-left: 1em;
         }
         
-        .search input[type=radio] {
+        input[type=radio] {
         	position: absolute;
         	left:0;
         	top:0;
@@ -181,7 +181,7 @@
         }
         
         .map_wrap {
-        	top: -48em;
+        	top: -48.5em;
         }
         
         .map_search {
@@ -224,6 +224,7 @@
 		    width: 3.8em;
         	height: 3.8em;
         	flex-wrap: wrap;
+        	cursor: pointer;
         }
         
         .icon_word{
@@ -317,7 +318,7 @@
         	position: absolute;
         	top:2em;
         	background-color: #000;
-        	z-index: 800;
+        	z-index: 700;
         	left: 45%;
         	height: 4em;
         	border-radius: 2em;
@@ -329,6 +330,71 @@
         	display:block;
         	color: white;
         	font-size: 2em;
+        }
+        
+        .upjongSearch{
+        	color:black;
+        	display:block;
+        	position: absolute;
+        	background-color: white;
+        	left: 40%;
+        	top: 10%;
+        	width: 40em;
+        	border-radius:1em;
+        	/*z-index: 1300; */
+        }
+        
+        .upjongSearch input[type=button]{
+        	background-color:#D2D5DA;
+        	font-size:1em;
+        	color:white;
+        	width: 6em;
+        	height: 3.5em;
+        	border: 0px;
+        	border-radius: 0.5em;
+        }
+        
+        .upjongSearch li {
+        	margin-left: 0.5em;
+        }
+        
+        .upjongSearch li label{
+        	background-color: #F3F4F6;
+        	display: block;
+        	padding:1em;
+        	border-radius: 2em;
+        }
+        
+        .head{
+        	padding:1.5em;
+        	display:block;
+        	border-bottom: 1px solid black;
+        }
+        
+        .midd{
+        	display:block;
+        	height: calc(100% - 6em - 14.1em);
+        }
+        
+        .midd .head{
+        	height: 6em;
+        }
+        
+        .footer{
+        	display:flex;
+        	justify-content:center;
+        	align-items:center;	
+        	height:6em;
+        }
+        
+        .modal_back{
+        	position:fixed;
+        	display:block;
+        	background-color: black;
+        	width: 98.9vw;
+        	height: 100vh;
+        	/*z-index: 1200; */
+        	opacity: 0.8;
         }
         
 		/* 카카오 api */
@@ -350,6 +416,75 @@
     <script src="https://kit.fontawesome.com/b494d45b9b.js" crossorigin="anonymous"></script>
 </head>
 <body>
+	<div class="upjongSearch">
+		<div class="head">업종을 선택하세요.</div>
+		<div class="midd">
+			<div class="head">
+				<ul>
+					<li>
+						<input type="radio" id="icon_list_big_1"/>
+						<label for="icon_list_big_1">
+							<span>숙박·음식</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_2"/>
+						<label for="icon_list_big_2">
+							<span>수리·개인서비스</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_3"/>
+						<label for="icon_list_big_3">
+							<span>도·소매</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_4"/>
+						<label for="icon_list_big_4">
+							<span>예술·스포츠·여가</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_5"/>
+						<label for="icon_list_big_5">
+							<span>교육</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_6"/>
+						<label for="icon_list_big_6">
+							<span>시설관리·임대</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_7"/>
+						<label for="icon_list_big_7">
+							<span>부동산</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_8"/>
+						<label for="icon_list_big_8">
+							<span>과학·기술</span>
+						</label>
+					</li>
+					<li>
+						<input type="radio" id="icon_list_big_1"/>
+						<label for="icon_list_big_1">
+							<span>숙박·음식</span>
+						</label>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="footer">
+			<input type="button" class="close" value="취소"/>
+			<input type="button" value="확인"/>
+		</div>
+	</div>
+	<div class="modal_back">
+	</div>
     <div class="nav">
         <h1>
 	    	<img src="<c:url value='/images/logo/logo.svg'/>">
@@ -401,7 +536,7 @@
    				<img src="<c:url value='/images/tip/tip_icon_1.svg'/>">
    				업종을 선택하세요.
    			</strong>
-   			<a href="" class="box_gray">업종 선택</a>
+   			<a href="javascript:void(0)" class="box_gray upjong_select">업종 선택</a>
    			<div class="icon">
    				<ul>
    					<li>
@@ -731,6 +866,35 @@
 		}
 		
 		marketing.addEventListener("click", searchFuc);
+		
+		let showModal = () => {
+			document.querySelector(".upjongSearch").style.setProperty("z-index","1300");
+			document.querySelector(".modal_back").style.setProperty("z-index","1200");
+		};
+		
+		document.querySelectorAll(".box input[type=radio]").forEach(
+			(icon) => {
+				icon.addEventListener('click', function(){
+					showModal();
+				})
+			}		
+		);
+		
+		document.querySelector(".upjong_select").addEventListener('click', function(){
+			showModal();
+		});
+		
+		let closeModal = () =>{
+			document.querySelector(".upjongSearch").style.removeProperty("z-index");
+			document.querySelector(".modal_back").style.removeProperty("z-index");
+		}
+		
+		document.querySelector(".close").addEventListener('click', function(){
+			closeModal();
+		});
+		
+		
+		
     </script>
 </body>
 </html>
