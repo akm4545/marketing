@@ -46,7 +46,8 @@ public class MainController{
 		for(int i=0; i<juso.size(); i++) {
 			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
 		}
-		System.out.println();
+		
+		//Json List로 변환 참고 코드
 		//List<StoreVO> storeVOS = hangjungCodeService.storeListInDong(jusoCodeNum);
 		//System.out.println("최종 반환 json" + storeVOS.toString());
 		
