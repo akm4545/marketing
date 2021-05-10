@@ -28,6 +28,7 @@ public class MainController{
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/text; charset=utf8")
 	public String search(String key) throws Exception {
 		String jusoCodeNum = ""; //주소 코드
+		String upjongCode = "";
 		
 		String[] jusoArr = key.split(" ");
 		
@@ -45,6 +46,7 @@ public class MainController{
 		
 		for(int i=0; i<juso.size(); i++) {
 			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
+			upjongCode = hangjungCodeService.searchUpjongCode(i, upjongCode); //업종코드 조회
 		}
 		
 		//Json List로 변환 참고 코드

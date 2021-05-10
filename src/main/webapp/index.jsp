@@ -32,21 +32,24 @@
         	margin-left: 1em;
         }
         
-        .nav a{
-        	display: block;
-        }
-        
         .logo{
         	vertical-align: super;
         }
         
         .menu{
         	float: right;
+        	display: flex !important;
+        	align-items: center;
+        	margin-top: 1em;
         }
         
         .menu li{
         	float: left;
         	padding-right: 20px; 
+        }
+        
+        .menu span{
+        	z-index: 800;
         }
         
         ul{
@@ -66,7 +69,7 @@
         	background-color: #4668D6;
         	border-radius: 3em;
         	height: 3.5em;
-        	width: 25.5em;
+        	width: 26em;
         	margin: 20px;
         	color: white;
         	font-size: 1.4em;
@@ -155,7 +158,8 @@
         	border: 0px;
         	background-color: #D2D5DA;
         	height: 3.5em;
-        	margin-top: 1em;
+        	margin: 0 auto;
+        	display: block;
         }
         
         .box h4{
@@ -198,11 +202,7 @@
         
         .icon i {
         	font-size:1.5em;
-        	width: 2.5em;
-        	height: 2.5em;
-        	border: 1px dashed black;
         	text-align: center;
-        	border-radius: 0.5em;
         }
         
         .icon input[type=radio] {
@@ -219,6 +219,11 @@
 		    align-content: center;
 		    justify-content: center;
 		    align-items: flex-end;
+		    border: 1px dashed black;
+		    border-radius: 0.5em;
+		    width: 3.8em;
+        	height: 3.8em;
+        	flex-wrap: wrap;
         }
         
         .icon_word{
@@ -229,12 +234,14 @@
         
         .promotion, .guide{
         	position: relative;
+        	display: flex;
+        	align-items: center;
         }
         
         .promotion::before {
         	content:"";
         	position:inherit;
-        	background-image: url(<c:url value='/images/tip/Group_481.svg'/>);
+        	background-image: url(<c:url value='/images/tip/Group_482.svg'/>);
         	z-index: 800;
         }
         
@@ -244,6 +251,7 @@
         	position: absolute;
         	left: 0;
         	border-radius: 1.4em;
+        	transition: width 0.2s ease;
         }
         
         .guide::before {
@@ -259,13 +267,26 @@
         	position: absolute;
         	left: 0;
         	border-radius: 1.4em;
+        	transition: width 0.2s ease;
         }
         
         .promotion::before, .promotion::after, .guide::before, .guide::after {
         	display: inline-block;
-        	width: 2.3em;
-        	height: 2.3em;
+        	width: 2em;
+        	height: 2em;
         }
+        
+        .promotion:hover span{
+        	color:#fff;
+        }
+        
+        .guide:hover span{
+        	color:#fff;
+        }
+        
+        .promotion:hover:after, .guide:hover:after{
+        	width: 110%;
+        } 
         
         a:link {
         	text-decoration: none;
@@ -347,7 +368,7 @@
             	</a>
             </li>
             <li>로그인</li>
-            <li><i class="fas fa-bars"></i></li>
+            <li><i class="fas fa-bars" style="font-size: 1.5em;"></i></li>
         </ul>
     </div>
     <div class="content">
@@ -445,7 +466,7 @@
    				<img src="<c:url value='/images/tip/tip_icon_2.svg'/>">
    				지도에서 위치를 선택하세요.
    			</strong>
-   			<div class="box_gray">위치 선택</div>
+   			<div class="box_gray" style="margin-bottom: 1em;">위치 선택</div>
    			<input type="button" id="marketing_search" value="분석하기"/>
     	</div>
     	<!-- <div>상권현황</div>
