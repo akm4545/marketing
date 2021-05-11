@@ -104,22 +104,26 @@ public class MainServiceImpl implements MainService{
 		String param = "";
 		StringBuilder urlBuilder = null;
 		
-		if(upjongIndex == 0) {
-			param = "?";
+		//if(upjongIndex == 0) {
+		//	param = "?";
 			
-			urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/largeUpjongList"); /*업종 대분류*/			
-		}else if(upjongIndex == 1) {
+		//	urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/largeUpjongList"); /*업종 대분류*/			
+	//	}
+//	else 
+		if(upjongIndex == 1) {
 			param = "&";
 			
 			urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/middleUpjongList"); /*업종 중분류*/
-			urlBuilder.append("?" + URLEncoder.encode("indsLclsCd","UTF-8") + "Q"); /*업종 대분류*/
-		}else if(upjongIndex == 2) {
-			param = "&";
-			
-			urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/smallUpjongList"); /*업종 소분류*/
-			urlBuilder.append("?" + URLEncoder.encode("indsLclsCd","UTF-8") + "Q"); /*업종 대분류*/
-			urlBuilder.append("?" + URLEncoder.encode("indsMclsCd","UTF-8") + "Q"); /*업종 중분류*/
+			urlBuilder.append("?" + URLEncoder.encode("indsLclsCd","UTF-8") + "O"); /*업종 대분류*/
 		}
+		//else if(upjongIndex == 2) {
+		//	param = "&";
+			
+		//	urlBuilder = new StringBuilder("http://apis.data.go.kr/B553077/api/open/sdsc/smallUpjongList"); /*업종 소분류*/
+		//	urlBuilder.append("?" + URLEncoder.encode("indsLclsCd","UTF-8") + "O"); /*업종 대분류*/
+		//	urlBuilder.append("&" + URLEncoder.encode("indsMclsCd","UTF-8") + "O"); /*업종 중분류*/
+		//}
+		
 		
 		urlBuilder.append(param + URLEncoder.encode("ServiceKey","UTF-8") + "=yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /* 요청 데이터 타입*/

@@ -13,6 +13,7 @@
         html, body {
 			width: 100%; height: 100%;
 			font-size: 10px;
+			font-family:'Lato', 'Noto Sans KR', 'Noto Sans KR Local','Malgun Gothic','맑은 고딕','NotoSans','돋움',Dotum,Helvetica,Verdana,Arial,sans-serif;
 		}
 		
 		.content{
@@ -176,12 +177,16 @@
        		border-radius: 0.5em;
         }
         
+        #marketing_search {
+        	cursor: pointer;
+        }
+        
         strong {
         	display: block;
         }
         
         .map_wrap {
-        	top: -48.5em;
+        	top: -51em;
         }
         
         .map_search {
@@ -333,25 +338,29 @@
         }
         
         .upjongSearch{
+        	font-size:1.5em;
         	color:black;
         	display:block;
         	position: absolute;
         	background-color: white;
-        	left: 40%;
+        	left: 30%;
         	top: 10%;
-        	width: 40em;
+        	width: 46em;
         	border-radius:1em;
-        	/*z-index: 1300; */
+        	/*z-index: 1300;*/
         }
         
         .upjongSearch input[type=button]{
         	background-color:#D2D5DA;
         	font-size:1em;
+        	font-weight:bold;
         	color:white;
         	width: 6em;
         	height: 3.5em;
         	border: 0px;
         	border-radius: 0.5em;
+        	cursor: pointer;
+        	margin: 0 0.5em;
         }
         
         .upjongSearch li {
@@ -363,12 +372,20 @@
         	display: block;
         	padding:1em;
         	border-radius: 2em;
+        	cursor: pointer;
+        }
+        
+        .upjongSearch > .head{
+        	font-size: 1.2em;
+        	display: flex;
+        	justify-content:space-between;
         }
         
         .head{
+        	overflow:hidden;
         	padding:1.5em;
         	display:block;
-        	border-bottom: 1px solid black;
+        	border-bottom: 1px solid #D4D8DB;
         }
         
         .midd{
@@ -377,7 +394,13 @@
         }
         
         .midd .head{
-        	height: 6em;
+        	height: 2em;
+        	display:flex;
+        	align-items:center;
+        }
+        
+        .midd ul {
+        	display:-webkit-box;
         }
         
         .footer{
@@ -393,8 +416,26 @@
         	background-color: black;
         	width: 98.9vw;
         	height: 100vh;
-        	/*z-index: 1200; */
+        	/*z-index: 1200;*/
         	opacity: 0.8;
+        }
+        
+        .upjongSearchText{
+        	padding: 1.3em 0;
+        	height:2em;
+        	display: flex;
+        	justify-content: center;
+        	border-bottom: 1px solid #D4D8DB;
+        }
+        
+        .upjongSearchText input[type=text]{
+        	width: 18em;
+        	height: 100%;
+        	background-color:#FBFBFB;
+        	border:none;
+        	padding:0 2em 0 1em;
+        	border-radius:0.3em;
+        	border: 1px solid #D4D8DB;
         }
         
 		/* 카카오 api */
@@ -417,7 +458,12 @@
 </head>
 <body>
 	<div class="upjongSearch">
-		<div class="head">업종을 선택하세요.</div>
+		<div class="head">
+			<strong>업종을 선택하세요.</strong>
+			<a href="">
+				<img src="<c:url value='/images/tip/icon_close_b.svg'/>"/>
+			</a>
+		</div>
 		<div class="midd">
 			<div class="head">
 				<ul>
@@ -476,6 +522,12 @@
 						</label>
 					</li>
 				</ul>
+			</div>
+			<div class="upjongSearchText">
+				<input type="text"/>
+			</div>
+			<div>
+				<strong>BEST 분석업종</strong>
 			</div>
 		</div>
 		<div class="footer">
@@ -603,6 +655,10 @@
    			</strong>
    			<div class="box_gray" style="margin-bottom: 1em;">위치 선택</div>
    			<input type="button" id="marketing_search" value="분석하기"/>
+   			<form action="<c:url value='/excelFileUpload'/>" method="post" enctype="multipart/form-data">
+	   			<input type="file" id="" name="excelFile"/>
+   				<button type="submit">업로드</button> 
+   			</form>
     	</div>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
