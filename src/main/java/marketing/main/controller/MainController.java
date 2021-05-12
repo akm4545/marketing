@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import marketing.main.service.MainServiceImpl;
 import marketing.main.service.UpJongCodeListService;
+import marketing.main.vo.UpJongVO;
 
 @Controller
 public class MainController{	
@@ -26,7 +27,7 @@ public class MainController{
 	@Resource(name = "hangjungCodeService")
 	MainServiceImpl hangjungCodeService;
 	
-	@Resource(name = "upJongCodeList")
+	@Resource(name = "upJongCodeListService")
 	UpJongCodeListService upJongCodeListService;
 	
 	@ResponseBody
@@ -64,7 +65,10 @@ public class MainController{
 	@ResponseBody
 	@RequestMapping(value = "upJongCodeList", method = RequestMethod.GET )
 	public String upJongCodeList(String upJongCode) throws Exception{
+		System.out.println(upJongCode);
+		List<UpJongVO> upJongList = upJongCodeListService.getUpjongList(upJongCode);
 		
+		System.out.println("aa" + upJongList.toString());
 		return "";
 	}
 }

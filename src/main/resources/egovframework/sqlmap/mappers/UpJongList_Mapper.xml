@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="marketing.main.dao.UpJongCodeListDAO">
+
+	<resultMap id="upJong" type="marketing.main.vo.UpJongVO">
+		<result column="INDSLCLSCD" property="indsLclsCd"/>
+		<result column="INDSLCLSNM" property="indsLclsNm"/>
+		<result column="INDSMCLSCD" property="indsMclsCd"/>
+		<result column="INDSMCLSNM" property="indsMclsNm"/>
+		<result column="INDSSCLSCD" property="indsSclsCd"/>
+		<result column="INDSSCLSNM" property="indsSclsNm"/>
+	</resultMap>
+	
+	<select id="getUpJongList" parameterType="String" resultMap="upJong">
+		SELECT * FROM UPJONG_CODE
+		WHERE INDSLCLSCD = #{upJongCode}
+	</select>
+</mapper>

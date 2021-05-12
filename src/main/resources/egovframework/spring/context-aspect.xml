@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
-	<aop:config>
+	<!-- <aop:config>
 		<aop:pointcut id="serviceMethod" expression="execution(* egovframework.example..impl.*Impl.*(..))" />
 
 		<aop:aspect ref="exceptionTransfer">
@@ -54,6 +54,6 @@
 	</bean>
 
 	<bean id="egovHandler" class="egovframework.example.cmmn.EgovSampleExcepHndlr" />
-	<bean id="otherHandler" class="egovframework.example.cmmn.EgovSampleOthersExcepHndlr" />	
+	<bean id="otherHandler" class="egovframework.example.cmmn.EgovSampleOthersExcepHndlr" />	 -->
 	
 </beans>
