@@ -56,34 +56,4 @@ public class MainController{
 		
 		return hangjungCodeService.storeListInDong(jusoCodeNum).toString();
 	}
-	
-	@RequestMapping(value = "/excelFileUpload", method = RequestMethod.POST)
-	public String excelFileUpload(HttpServletRequest request) throws FileUploadException{
-		File saveDir = new File("D:\\");
-		
-		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
-		fileItemFactory.setRepository(saveDir);
-		fileItemFactory.setSizeThreshold(1024 * 1024);
-		ServletFileUpload fileUpload = new ServletFileUpload(fileItemFactory);
-		
-		try {
-			List<FileItem> items = fileUpload.parseRequest(request);
-			System.out.println(items.toString());
-			for(FileItem item : items) {
-				if(!item.isFormField()) {
-					if(item.getSize() > 0) {
-						String separator = File.separator;
-						int index = item.getName().lastIndexOf(separator);
-						String fileName = item.getName().substring(index + 1);
-						File uploadFile = new File("D:\\" + fileName);
-						System.out.println(uploadFile.getAbsolutePath());
-						item.write(uploadFile);
-					}
-				}
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "index";
-	}
 }

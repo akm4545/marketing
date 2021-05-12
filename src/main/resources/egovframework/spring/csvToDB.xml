@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:batch="http://www.springframework.org/schema/batch"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+  	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+  	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <job id="csvJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="csvStep">
+            <tasklet>
+                <chunk reader="csvReader" writer="personWriter" commit-interval="10" />
+            </tasklet>
+        </step>
+    </job>
+
+    <bean id="csvReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    	<!-- <property name="strict" value="false" /> -->
+        <property name="resource" value="classpath:csv/upJong.csv" />
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer">
+                    <!-- 라인을 어떻게 잘라야 하는지 설정해준다. -->
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <!-- 기본 구분자인 comma로 필드 값을 구분한다. tokenize 메소드가 
+                        FieldSet 객체를 반환 하는데 FieldSet이 names와 구분한 값들을 가지고 있다. -->
+                        <property name="delimiter" value=","/>
+                        <property name="names" value="상권분석(8대업종),대분류코드,대분류명,중분류코드,중분류명,소분류코드,소분류명" />
+                    </bean>
+                </property>
+
+                <property name="fieldSetMapper">
+                    <!-- lineTokenizer로부터 넘겨받은 FieldSet 객체를 person 객체로 변환하여 반환한다.
+                                        매핑 할 때 FieldSet의 names 값을 camelCase로 변환 후 같은 이름의 setter로 매칭된다. 
+                                        예로 PERSON_IN -> personId, FULL_NAME -> fullName -->
+                    <bean id="fieldSetMapper" class="marketing.common.UpjongCodeMapper" scope="step">
+                    	<property name="prototypeBeanName" value="upjongCodeExcelVO"></property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <!--첫 번째 라인은 컬럼 헤더이기 때문에 두 번째 라인부터 읽기를 시작한다.-->
+        <property name="linesToSkip" value="1" />
+    </bean>
+
+    <!-- fieldSetMapper가 새로 반환 할 Person 객체. scope이 프로토파입이기 때문에 매번 새로운 객체를 반환한다. -->
+    <bean id="upjongCodeExcelVO" class="marketing.file.vo.UpjongCodeExcelVO" scope="prototype" />
+
+    <!-- JDBC writer. Insert나 Update 쿼리를 실행 할 수 있다. -->
+    <bean id="personWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter" scope="step">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sql">
+            <value>
+                <![CDATA[
+	                INSERT INTO UPJONG_CODE
+	                (INDSLCLSCD, INDSLCLSNM, INDSMCLSCD, INDSMCLSNM, INDSSCLSCD, INDSSCLSNM) VALUES
+	                (:indsLclsCd, :indsLclsNm, :indsMclsCd, :indsMclsNm, :indsSclsCd, :indsSclsNm)
+                ]]>
+            </value>
+        </property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+        </property>
+    </bean>
+</beans>

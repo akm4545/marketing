@@ -655,10 +655,11 @@
    			</strong>
    			<div class="box_gray" style="margin-bottom: 1em;">위치 선택</div>
    			<input type="button" id="marketing_search" value="분석하기"/>
-   			<form action="<c:url value='/excelFileUpload'/>" method="post" enctype="multipart/form-data">
+   			<%-- <form action="<c:url value='/excelFileUpload'/>" method="post" enctype="multipart/form-data">
 	   			<input type="file" id="" name="excelFile"/>
-   				<button type="submit">업로드</button> 
-   			</form>
+   				<button type="submit">업로드</button>
+   			</form> --%>
+   			<input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'"/>
     	</div>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
