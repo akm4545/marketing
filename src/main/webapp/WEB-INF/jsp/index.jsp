@@ -186,7 +186,7 @@
         }
         
         .map_wrap {
-        	top: -51em;
+        	top: -48.5em;
         }
         
         .map_search {
@@ -347,7 +347,7 @@
         	top: 10%;
         	width: 46em;
         	border-radius:1em;
-        	/*z-index: 1300;*/
+        	/* z-index: 1300; */
         }
         
         .upjongSearch input[type=button]{
@@ -401,6 +401,9 @@
         
         .midd ul {
         	display:-webkit-box;
+        	position: relative;
+        	transition:left 1s;
+        	left: 0em;
         }
         
         .footer{
@@ -416,7 +419,7 @@
         	background-color: black;
         	width: 98.9vw;
         	height: 100vh;
-        	/*z-index: 1200;*/
+        	/* z-index: 1200; */
         	opacity: 0.8;
         }
         
@@ -436,6 +439,39 @@
         	padding:0 2em 0 1em;
         	border-radius:0.3em;
         	border: 1px solid #D4D8DB;
+        }
+        
+        .btnPrev, .btnNext{
+        	width: 2em;
+        	height: 2em;
+        	border-radius: 1em;
+        	background-color:#D2D5DA;
+        	position: absolute;
+        	z-index:2000;
+        }
+        
+        .btnNext{
+        	right: 1.2em;
+        }
+        
+        .btnPrev span{
+        	width:100%;
+        	height:100%;
+        	display:block;
+        	text-indent: -1000px;
+        	background-image: url(<c:url value='/images/tip/search_slide_prev.svg'/>);
+        	background-position:center center;
+        	background-repeat: no-repeat; 
+        }
+        
+        .btnNext span{
+        	width:100%;
+        	height:100%;
+        	display:block;
+	        text-indent: -1000px;
+        	background-image: url(<c:url value='/images/tip/search_slide_next.svg'/>);
+        	background-position:center center;
+        	background-repeat: no-repeat;
         }
         
 		/* 카카오 api */
@@ -460,51 +496,57 @@
 	<div class="upjongSearch">
 		<div class="head">
 			<strong>업종을 선택하세요.</strong>
-			<a href="">
+			<a href="javascript:void(0)">
 				<img src="<c:url value='/images/tip/icon_close_b.svg'/>"/>
 			</a>
 		</div>
 		<div class="midd">
 			<div class="head">
+				<a href="javascript:void(0)" class="btnPrev" style="display: none;">
+					<span>이전</span>
+				</a>
+				<a href="javascript:void(0)" class="btnNext" style="display: block;">
+					<span>다음</span>
+				</a>
 				<ul>
 					<li>
-						<input type="radio" id="icon_list_big_1"/>
+						<input type="radio" id="icon_list_big_1" value="Q"/>
 						<label for="icon_list_big_1">
 							<span>숙박·음식</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_2"/>
+						<input type="radio" id="icon_list_big_2" value="F"/>
 						<label for="icon_list_big_2">
 							<span>수리·개인서비스</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_3"/>
+						<input type="radio" id="icon_list_big_3" value="C"/>
 						<label for="icon_list_big_3">
 							<span>도·소매</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_4"/>
+						<input type="radio" id="icon_list_big_4" value="M"/>
 						<label for="icon_list_big_4">
 							<span>예술·스포츠·여가</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_5"/>
+						<input type="radio" id="icon_list_big_5" value="R"/>
 						<label for="icon_list_big_5">
 							<span>교육</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_6"/>
+						<input type="radio" id="icon_list_big_6" value="L"/>
 						<label for="icon_list_big_6">
 							<span>시설관리·임대</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_7"/>
+						<input type="radio" id="icon_list_big_7" />
 						<label for="icon_list_big_7">
 							<span>부동산</span>
 						</label>
@@ -659,7 +701,8 @@
 	   			<input type="file" id="" name="excelFile"/>
    				<button type="submit">업로드</button>
    			</form> --%>
-   			<input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'"/>
+   			<input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'" style="display: none;"/>
+   			<!-- 새로고침시 실행되는 에러 해결 -->
     	</div>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
@@ -950,8 +993,49 @@
 			closeModal();
 		});
 		
+		let slideMenu = (direction) => {
+			if(direction === "next"){
+				document.querySelector(".btnPrev").style.setProperty("display","block");
+				document.querySelector(".btnNext").style.setProperty("display","none");
+				document.querySelector(".head ul").style.setProperty("left","-30em");
+			}else{
+				document.querySelector(".btnPrev").style.setProperty("display","none");
+				document.querySelector(".btnNext").style.setProperty("display","block");
+				document.querySelector(".head ul").style.setProperty("left","0em");
+			}
+		}
 		
+		document.querySelector(".btnNext").addEventListener('click',function(){
+			slideMenu("next");
+		});
 		
+		document.querySelector(".btnPrev").addEventListener('click',function(){
+			slideMenu("prev");
+		});
+		
+		let upJongList = (upJongCode) => {
+			$.ajax({
+				url:"<c:url value='/upJongCodeList'/>",
+				data:{
+					upJongCode : upJongCode
+				},
+				method:"get",
+				success:function(data){
+					
+				},
+				error:function(data){
+					
+				}
+			})
+		};
+		
+		document.querySelectorAll(".head ul input[type=radio]").forEach(
+				(upJongRadio) => {
+					upJongRadio.addEventListener('click',function(evnet){
+						upJongList(event.target.value);
+					})
+				}	
+		);
     </script>
 </body>
 </html>

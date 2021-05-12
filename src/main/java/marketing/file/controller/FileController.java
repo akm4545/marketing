@@ -64,6 +64,7 @@ public class FileController {
 	
 	@RequestMapping(value = "/csvToDB", method = RequestMethod.GET)
 	public String csvToDB () throws Exception{
+		System.out.println("a");
 		jobLauncher.run(csvJob, new JobParameters());
 		
 		return "index";

@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import marketing.main.service.MainServiceImpl;
+import marketing.main.service.UpJongCodeListService;
 
 @Controller
 public class MainController{	
 	
 	@Resource(name = "hangjungCodeService")
 	MainServiceImpl hangjungCodeService;
+	
+	@Resource(name = "upJongCodeList")
+	UpJongCodeListService upJongCodeListService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/text; charset=utf8")
@@ -55,5 +59,12 @@ public class MainController{
 		//System.out.println("최종 반환 json" + storeVOS.toString());
 		
 		return hangjungCodeService.storeListInDong(jusoCodeNum).toString();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "upJongCodeList", method = RequestMethod.GET )
+	public String upJongCodeList(String upJongCode) throws Exception{
+		
+		return "";
 	}
 }
