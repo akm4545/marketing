@@ -447,7 +447,7 @@
         	border-radius: 1em;
         	background-color:#D2D5DA;
         	position: absolute;
-        	z-index:2000;
+        	/*z-index:2000; */
         }
         
         .btnNext{
@@ -458,7 +458,7 @@
         	width:100%;
         	height:100%;
         	display:block;
-        	text-indent: -1000px;
+        	text-indent: -2000px;
         	background-image: url(<c:url value='/images/tip/search_slide_prev.svg'/>);
         	background-position:center center;
         	background-repeat: no-repeat; 
@@ -468,7 +468,7 @@
         	width:100%;
         	height:100%;
         	display:block;
-	        text-indent: -1000px;
+	        text-indent: -2000px;
         	background-image: url(<c:url value='/images/tip/search_slide_next.svg'/>);
         	background-position:center center;
         	background-repeat: no-repeat;
@@ -540,27 +540,21 @@
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_6" value="L"/>
+						<input type="radio" id="icon_list_big_6" value="U"/>
 						<label for="icon_list_big_6">
 							<span>시설관리·임대</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_7" />
+						<input type="radio" id="icon_list_big_7" value="L"/>
 						<label for="icon_list_big_7">
 							<span>부동산</span>
 						</label>
 					</li>
 					<li>
-						<input type="radio" id="icon_list_big_8"/>
+						<input type="radio" id="icon_list_big_8" value="I"/>
 						<label for="icon_list_big_8">
 							<span>과학·기술</span>
-						</label>
-					</li>
-					<li>
-						<input type="radio" id="icon_list_big_1"/>
-						<label for="icon_list_big_1">
-							<span>숙박·음식</span>
 						</label>
 					</li>
 				</ul>
@@ -568,8 +562,8 @@
 			<div class="upjongSearchText">
 				<input type="text"/>
 			</div>
-			<div>
-				<strong>BEST 분석업종</strong>
+			<div id="upJongList">
+				
 			</div>
 		</div>
 		<div class="footer">
@@ -805,7 +799,6 @@
 		                            '<span class="title">법정동 주소정보</span>' + 
 		                            detailAddr + 
 		                        '</div>';
-
 		            // 마커를 클릭한 위치에 표시합니다 
 		            marker.setPosition(mouseEvent.latLng);
 		            marker.setMap(map);
@@ -970,6 +963,7 @@
 		let showModal = () => {
 			document.querySelector(".upjongSearch").style.setProperty("z-index","1300");
 			document.querySelector(".modal_back").style.setProperty("z-index","1200");
+			document.querySelector(".btnNext").style.setProperty("z-index","2000");
 		};
 		
 		document.querySelectorAll(".box input[type=radio]").forEach(
@@ -987,6 +981,8 @@
 		let closeModal = () =>{
 			document.querySelector(".upjongSearch").style.removeProperty("z-index");
 			document.querySelector(".modal_back").style.removeProperty("z-index");
+			document.querySelector(".btnNext").style.setProperty("z-index","0");
+			document.querySelector(".btnPrev").style.setProperty("z-index","0");
 		}
 		
 		document.querySelector(".close").addEventListener('click', function(){
@@ -998,10 +994,14 @@
 				document.querySelector(".btnPrev").style.setProperty("display","block");
 				document.querySelector(".btnNext").style.setProperty("display","none");
 				document.querySelector(".head ul").style.setProperty("left","-30em");
+				document.querySelector(".btnNext").style.setProperty("z-index","0");
+				document.querySelector(".btnPrev").style.setProperty("z-index","2000");
 			}else{
 				document.querySelector(".btnPrev").style.setProperty("display","none");
 				document.querySelector(".btnNext").style.setProperty("display","block");
 				document.querySelector(".head ul").style.setProperty("left","0em");
+				document.querySelector(".btnNext").style.setProperty("z-index","2000");
+				document.querySelector(".btnPrev").style.setProperty("z-index","0");
 			}
 		}
 		
@@ -1016,15 +1016,33 @@
 		let upJongList = (upJongCode) => {
 			$.ajax({
 				url:"<c:url value='/upJongCodeList'/>",
+				dataType:"json",
+				//contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 				data:{
 					upJongCode : upJongCode
 				},
 				method:"get",
 				success:function(data){
-					
+					let upJongHtml = "<ul>";
+					for(key in data){
+						let jsonInnerArr = data[key];
+						upJongHtml += "<li style=''>" + key + "</li>";
+						upJongHtml += "<div>";
+						upJongHtml += "<ul>";
+						for(arrKey in jsonInnerArr){
+							upJongHtml += "<li>" + JSON.stringify(jsonInnerArr[arrKey].indsMclsNm) + "<li>";	
+						}
+						upJongHtml += "</ul>";
+						upJongHtml += "</div>";
+						//alert(key);
+						//alert(JSON.stringify(data[key]));
+					}
+					upJongHtml += "</ul>";
+					alert(upJongHtml);
+					document.getElementById("upJongList").innerHTML = upJongHtml;
 				},
 				error:function(data){
-					
+					console.log("에러가 발생했습니다.");
 				}
 			})
 		};

@@ -1,6 +1,9 @@
 package marketing.main.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,7 +19,22 @@ public class UpJongCodeListServiceImpl implements UpJongCodeListService{
 	UpJongCodeListDAO upJongCodeListDAO;
 	
 	@Override
-	public List<UpJongVO> getUpjongList(String upJongCode) throws Exception {
-		return upJongCodeListDAO.getUpJongList(upJongCode);
+	public Map<String,List<UpJongVO>> getUpjongList(String upJongCode) throws Exception {
+		Map<String,List<UpJongVO>> upJongMap = new HashMap<String, List<UpJongVO>>();
+		
+		List<String> upJongNm = upJongCodeListDAO.getUpjongNm(upJongCode); 
+		List<UpJongVO> upJongList = upJongCodeListDAO.getUpJongList(upJongCode);
+		
+		for(int i=0; i<upJongNm.size(); i++) {
+			List<UpJongVO> tempList = new ArrayList<UpJongVO>();
+			upJongMap.put(upJongNm.get(i), tempList);
+			for(int j=0; j<upJongList.size(); j++) {
+				if(upJongNm.get(i).equals(upJongList.get(j).getIndsLclsNm())) {
+					upJongMap.get(upJongNm.get(i)).add(upJongList.get(j));
+					//System.out.println("반복" + j + upJongMap.toString());
+				}
+			}
+		}
+		return upJongMap;
 	}
 }

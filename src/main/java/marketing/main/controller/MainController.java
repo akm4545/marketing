@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 import marketing.main.service.MainServiceImpl;
 import marketing.main.service.UpJongCodeListService;
@@ -51,8 +54,8 @@ public class MainController{
 		List<String> juso = new ArrayList<>(Arrays.asList(jusoArr));
 		
 		for(int i=0; i<juso.size(); i++) {
-			//jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
-			upjongCode = hangjungCodeService.searchUpjongCode(i, upjongCode); //업종코드 조회
+			jusoCodeNum = hangjungCodeService.searchJosuCode(i, juso.get(i), jusoCodeNum); //행정동 코드 조회
+			//upjongCode = hangjungCodeService.searchUpjongCode(i, upjongCode); //업종코드 조회
 		}
 		
 		//Json List로 변환 참고 코드
@@ -63,12 +66,13 @@ public class MainController{
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "upJongCodeList", method = RequestMethod.GET )
+	@RequestMapping(value = "upJongCodeList", method = RequestMethod.GET, produces = "application/text; charset=utf8")
 	public String upJongCodeList(String upJongCode) throws Exception{
-		System.out.println(upJongCode);
-		List<UpJongVO> upJongList = upJongCodeListService.getUpjongList(upJongCode);
+		Map<String,List<UpJongVO>> upJongListMap = upJongCodeListService.getUpjongList(upJongCode);
 		
-		System.out.println("aa" + upJongList.toString());
-		return "";
+		String upJongListJson = new Gson().toJson(upJongListMap);
+		System.out.println(upJongListJson);
+		
+		return upJongListJson;
 	}
 }

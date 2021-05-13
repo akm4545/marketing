@@ -9,7 +9,7 @@ import marketing.main.vo.UpJongVO;
 
 @Mapper("upJongCodeListDAO")
 public interface UpJongCodeListDAO {
-
 	public List<UpJongVO> getUpJongList(@Param("upJongCode") String upJongCode) throws Exception;
-	
+
+	public List<String> getUpjongNm(String upJongCode) throws Exception;
 }
