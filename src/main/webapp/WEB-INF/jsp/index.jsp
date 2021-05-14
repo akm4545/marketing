@@ -901,7 +901,8 @@
 					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 					data:{
 						key : centerAddr,
-						code : upJongSmCode
+						code : upJongSmCode,
+						upJongKey : upJongKeyword
 					},
 					success:function(data, textStatus){
 						var positions = [];					

@@ -227,6 +227,56 @@ public class MainServiceImpl implements MainService{
         return null;
 	}
 	
+	@Override
+	public void storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception {
+		StringBuilder urlBuilder = new StringBuilder("https://sg.sbiz.or.kr/godo/getAvgAmtInfo.json"); /*URL*/
+		
+		urlBuilder.append("?" + URLEncoder.encode("admiCd","UTF-8") + "=" + jusoCodeNum.replace("\"", "").substring(0,7)); /*요청 분류*/
+		urlBuilder.append("&" + URLEncoder.encode("upjongCd","UTF-8") + "=" + upJongKey); /*행정동*/
+		urlBuilder.append("&" + URLEncoder.encode("simpleLoc","UTF-8") + "=dsad+dasd+dsad" ); /*상권업종 소분류코드*/
+        
+        URL url = new URL(urlBuilder.toString());
+        
+        System.out.println(url.toString());
+        
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        
+        System.out.println("Response code: " + conn.getResponseCode());
+        
+        BufferedReader rd;
+        
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        String line;
+        
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        
+        rd.close();
+        conn.disconnect();
+        
+        //JsonObject storeJson = new Gson().fromJson(sb.toString(), JsonObject.class);
+        
+        System.out.println(sb.toString());
+        
+        //재귀함수 안쓰고 고정 깊이를 가진 Jons객체에서 꺼내오기
+        //storeJson = (JsonObject) storeJson.get("body");
+        //JsonArray storeJsonArr = (JsonArray) storeJson.get("items");
+        
+        //Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
+        //List<StoreVO> storeVOS = new Gson().fromJson(storeJsonArr.toString(), type);
+        
+	}
+	
 	//깊이가 고정이지 않은 코드를 위한 재귀함수 힌트 
 /*	@Override
  *	public JsonObject recurseKeys(JsonObject jObj, String findKey, String findValue) throws Exception {

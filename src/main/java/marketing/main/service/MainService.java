@@ -12,5 +12,7 @@ public interface MainService {
 	JsonObject recurseKeys(JsonObject jObj, String findKey, String findValue) throws Exception;
 
 	String searchUpjongCode(int upjongIndex, String upjongCode)throws Exception;
-
+	
+	void storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception;
+	
 }

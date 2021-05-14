@@ -36,7 +36,8 @@ public class MainController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/text; charset=utf8")
-	public String search(@RequestParam("key") String key, @RequestParam("code") String code) throws Exception {
+	public String search(@RequestParam("key") String key, @RequestParam("code") String code,
+			@RequestParam("upJongKey") String upJongKey) throws Exception {
 		String jusoCodeNum = ""; //주소 코드
 		//String upjongCode = "";
 		
@@ -59,9 +60,13 @@ public class MainController{
 			//upjongCode = hangjungCodeService.searchUpjongCode(i, upjongCode); //업종코드 조회
 		}
 		
+		//https://sg.sbiz.or.kr/godo/getAvgAmtInfo.json?admiCd=11140615&upjongCd=I561914&simpleLoc=%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C+%EC%84%9C%EA%B5%AC+%EA%B4%80%EC%A0%801%EB%8F%99
+		//요청주소 법칙 동 코드 위에 2자리수 빼고 요청, 업종 코드는 고유 코드를 사용하는듯 함 추출 JSON으로 전체 추출 가능 심플 로케이션은 어떤 글자든 3자리의 띄어쓰기가 필요
 		//Json List로 변환 참고 코드
 		//List<StoreVO> storeVOS = hangjungCodeService.storeListInDong(jusoCodeNum);
 		//System.out.println("최종 반환 json" + storeVOS.toString());
+		upJongKey = upJongCodeListService.getCopyUpJongCode(upJongKey);
+		hangjungCodeService.storeListInDongAvg(jusoCodeNum, upJongKey);
 		
 		return hangjungCodeService.storeListInDong(jusoCodeNum, code).toString();
 	}

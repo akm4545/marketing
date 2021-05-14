@@ -37,4 +37,9 @@ public class UpJongCodeListServiceImpl implements UpJongCodeListService{
 		}
 		return upJongMap;
 	}
+
+	@Override
+	public String getCopyUpJongCode(String upJongKey) throws Exception {
+		return upJongCodeListDAO.getCopyUpJongCode(upJongKey);
+	}
 }

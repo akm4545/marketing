@@ -9,4 +9,6 @@ public interface UpJongCodeListService {
 
 	Map<String, List<UpJongVO>> getUpjongList(String upJongCode) throws Exception;
 
+	String getCopyUpJongCode(String upJongKey) throws Exception;
+
 }

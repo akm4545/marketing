@@ -21,6 +21,10 @@
 	<select id="getUpjongNm" parameterType="String" resultType="String">
 		SELECT DISTINCT(INDSLCLSNM) FROM UPJONG_CODE
 		WHERE INDSLCLSCD = #{upJongCode}
-		 
+	</select>
+	
+	<select id="getCopyUpJongCode" parameterType="String" resultType="String">
+		SELECT UPJONG_CD_COPY FROM UPJONG_CODE_COPY
+		WHERE UPJONG_NM_COPY = #{upJongKey} 
 	</select>
 </mapper>
