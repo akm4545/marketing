@@ -7,7 +7,7 @@ public interface MainService {
 
 	String searchJosuCode(int jusoIndex, String jusoKeyword, String jusoCodeNum);
 
-	JsonArray storeListInDong(String jusoCodeNum) throws Exception;
+	JsonArray storeListInDong(String jusoCodeNum, String code) throws Exception;
 
 	JsonObject recurseKeys(JsonObject jObj, String findKey, String findValue) throws Exception;
 

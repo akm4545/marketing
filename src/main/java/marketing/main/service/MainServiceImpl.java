@@ -154,7 +154,7 @@ public class MainServiceImpl implements MainService{
 	
 	//최종 주소로 상권조회
 	@Override
-	public JsonArray storeListInDong(String jusoCodeNum) throws Exception{
+	public JsonArray storeListInDong(String jusoCodeNum, String code) throws Exception{
 		//yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D 서비스키
 		//필요 응답 메세지 항목
 		//bizesNm 상호명, indsSclsNm 상권업종 대분류명, InoAdr 지번주소, lon 경도, lat 위도  
@@ -162,6 +162,7 @@ public class MainServiceImpl implements MainService{
 		
 		urlBuilder.append("?" + URLEncoder.encode("divId","UTF-8") + "=" + URLEncoder.encode("adongCd", "UTF-8")); /*요청 분류*/
 		urlBuilder.append("&" + URLEncoder.encode("key","UTF-8") + "=" + jusoCodeNum.replace("\"", "")); /*행정동*/
+		urlBuilder.append("&" + URLEncoder.encode("indsSclsCd","UTF-8") + "=" + code); /*상권업종 소분류코드*/
         urlBuilder.append("&" + URLEncoder.encode("ServiceKey","UTF-8") + "=yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("ServiceKey","UTF-8") + "=" + URLEncoder.encode("yzW%2BB0UU102pdMQBsBDX45wAOqDSIpO7azfCQl0RV9HmD7mpv75mbv13mLIWErmt20cjuDaM%2BUQwThrntMoyAQ%3D%3D", "UTF-8")); /*공공데이터포털에서 받은 인증키*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/

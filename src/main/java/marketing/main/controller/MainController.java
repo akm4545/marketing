@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -35,9 +36,9 @@ public class MainController{
 	
 	@ResponseBody
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces = "application/text; charset=utf8")
-	public String search(String key) throws Exception {
+	public String search(@RequestParam("key") String key, @RequestParam("code") String code) throws Exception {
 		String jusoCodeNum = ""; //주소 코드
-		String upjongCode = "";
+		//String upjongCode = "";
 		
 		String[] jusoArr = key.split(" ");
 		
@@ -62,7 +63,7 @@ public class MainController{
 		//List<StoreVO> storeVOS = hangjungCodeService.storeListInDong(jusoCodeNum);
 		//System.out.println("최종 반환 json" + storeVOS.toString());
 		
-		return hangjungCodeService.storeListInDong(jusoCodeNum).toString();
+		return hangjungCodeService.storeListInDong(jusoCodeNum, code).toString();
 	}
 	
 	@ResponseBody

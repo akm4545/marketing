@@ -367,7 +367,7 @@
         	margin-left: 0.5em;
         }
         
-        .upjongSearch li label{
+        .upjongSearch li label:not(#upJongList li label){
         	background-color: #F3F4F6;
         	display: block;
         	padding:1em;
@@ -474,6 +474,13 @@
         	background-repeat: no-repeat;
         }
         
+        #upJongList{
+        	overflow: scroll;
+        	height: auto;
+        	padding: 1em;
+        	max-height: 20em;
+        }
+        
 		/* 카카오 api */
         .map_wrap {position:relative;overflow:hidden;width:100%;height:700px;}
 		.radius_border{border:1px solid #919191;border-radius:5px;}     
@@ -496,7 +503,7 @@
 	<div class="upjongSearch">
 		<div class="head">
 			<strong>업종을 선택하세요.</strong>
-			<a href="javascript:void(0)">
+			<a href="javascript:void(0)" class="close">
 				<img src="<c:url value='/images/tip/icon_close_b.svg'/>"/>
 			</a>
 		</div>
@@ -568,7 +575,7 @@
 		</div>
 		<div class="footer">
 			<input type="button" class="close" value="취소"/>
-			<input type="button" value="확인"/>
+			<input type="button" class="keywordInput" value="확인" disabled/>
 		</div>
 	</div>
 	<div class="modal_back">
@@ -883,79 +890,86 @@
 		let marketing = document.getElementById("marketing_search");
 		
 		let searchFuc = () => {
-			centerAddr = document.getElementById("centerAddr").innerText;
-			$.ajax({
-				url:"<c:url value='/search'/>",
-				type:"post",
-				dataType:"json",
-				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-				data:{
-					key : centerAddr
-				},
-				success:function(data, textStatus){
-					var positions = [];					
+			let upJongKeyword = document.querySelector(".upjong_select").innerText;
+			let upJongSmCode = document.querySelector(".upjong_select").dataset['keyword'];
+			if(upJongKeyword !== "업종 선택"){
+				centerAddr = document.getElementById("centerAddr").innerText;
+				$.ajax({
+					url:"<c:url value='/search'/>",
+					type:"post",
+					dataType:"json",
+					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+					data:{
+						key : centerAddr,
+						code : upJongSmCode
+					},
+					success:function(data, textStatus){
+						var positions = [];					
 
-					setMarkers(map);
-					
-					markers = [];
-					
-					for(key in data) {
-					    //alert(data[key].bizesNm);
-					    positions.push({
-					    	content: '<div>' + data[key].bizesNm +'</div>'
-					    			+ '<div>' + data[key].lnoAdr +'</div>',
-					    	latlng : new kakao.maps.LatLng(data[key].lat, data[key].lon) 
-					    });
-					}
-					
-					//마커 배열 생성 예제
-					//{
-				    //    content: '<div>카카오</div>', 
-				    //    latlng: new kakao.maps.LatLng(33.450705, 126.570677)
-				    //},
-				    
-					for (var i = 0; i < positions.length; i ++) {
-					    // 마커를 생성합니다
-					    var marker = new kakao.maps.Marker({
-					        map: map, // 마커를 표시할 지도
-					        position: positions[i].latlng // 마커의 위치
-					    });
+						setMarkers(map);
+						
+						markers = [];
+						
+						for(key in data) {
+						    //alert(data[key].bizesNm);
+						    positions.push({
+						    	content: '<div>' + data[key].bizesNm +'</div>'
+						    			+ '<div>' + data[key].lnoAdr +'</div>',
+						    	latlng : new kakao.maps.LatLng(data[key].lat, data[key].lon) 
+						    });
+						}
+						
+						//마커 배열 생성 예제
+						//{
+					    //    content: '<div>카카오</div>', 
+					    //    latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+					    //},
 					    
-					    markers.push(marker);
+						for (var i = 0; i < positions.length; i ++) {
+						    // 마커를 생성합니다
+						    var marker = new kakao.maps.Marker({
+						        map: map, // 마커를 표시할 지도
+						        position: positions[i].latlng // 마커의 위치
+						    });
+						    
+						    markers.push(marker);
 
-					    // 마커에 표시할 인포윈도우를 생성합니다 
-					    var infowindow = new kakao.maps.InfoWindow({
-					        content: positions[i].content // 인포윈도우에 표시할 내용
-					    });
+						    // 마커에 표시할 인포윈도우를 생성합니다 
+						    var infowindow = new kakao.maps.InfoWindow({
+						        content: positions[i].content // 인포윈도우에 표시할 내용
+						    });
 
-					    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-					    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-					    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-					    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-					    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+						    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+						    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+						    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+						    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+						    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+						}
+
+						// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+						function makeOverListener(map, marker, infowindow) {
+						    return function() {
+						        infowindow.open(map, marker);
+						    };
+						}
+
+						// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+						function makeOutListener(infowindow) {
+						    return function() {
+						        infowindow.close();
+						    };
+						}
+						
+					},
+					error:function(data, textStatus, errorThrown){
+						alert(textStatus);
+						alert(errorThrown);
+						alert("실패" + data);
 					}
-
-					// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
-					function makeOverListener(map, marker, infowindow) {
-					    return function() {
-					        infowindow.open(map, marker);
-					    };
-					}
-
-					// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
-					function makeOutListener(infowindow) {
-					    return function() {
-					        infowindow.close();
-					    };
-					}
-					
-				},
-				error:function(data, textStatus, errorThrown){
-					alert(textStatus);
-					alert(errorThrown);
-					alert("실패" + data);
-				}
-			});
+				});
+			}else{
+				alert("업종을 선택하세요.");
+			}
 		}
 		
 		marketing.addEventListener("click", searchFuc);
@@ -964,6 +978,8 @@
 			document.querySelector(".upjongSearch").style.setProperty("z-index","1300");
 			document.querySelector(".modal_back").style.setProperty("z-index","1200");
 			document.querySelector(".btnNext").style.setProperty("z-index","2000");
+			document.querySelector(".keywordInput").style.setProperty("background-color","#D2D5DA");
+			document.querySelector(".keywordInput").setAttribute("disabled",true);
 		};
 		
 		document.querySelectorAll(".box input[type=radio]").forEach(
@@ -985,9 +1001,13 @@
 			document.querySelector(".btnPrev").style.setProperty("z-index","0");
 		}
 		
-		document.querySelector(".close").addEventListener('click', function(){
-			closeModal();
-		});
+		document.querySelectorAll(".close").forEach(
+			(close) => {
+				close.addEventListener('click', function(){
+					closeModal();
+				});	
+			}		
+		)
 		
 		let slideMenu = (direction) => {
 			if(direction === "next"){
@@ -1013,7 +1033,24 @@
 			slideMenu("prev");
 		});
 		
+		let upJongListClick = (upJongObject) => {
+			document.querySelectorAll(".upJongCdLI").forEach(
+				(label) => {
+					label.firstChild.dataset.select = "N";
+					label.style.setProperty("background-color","white");
+					label.style.setProperty("color","black");
+				}	
+			);
+			document.querySelector("label[for=" + upJongObject.value + "]").previousSibling.dataset.select = "Y";
+			document.querySelector("label[for=" + upJongObject.value + "]").parentNode.style.setProperty("background-color","#4668D6");
+			document.querySelector("label[for=" + upJongObject.value + "]").parentNode.style.setProperty("color","white");
+			document.querySelector(".keywordInput").style.setProperty("background-color","#4668D6");
+			document.querySelector(".keywordInput").removeAttribute("disabled");
+		}
+		
 		let upJongList = (upJongCode) => {
+			document.querySelector(".keywordInput").style.setProperty("background-color","#D2D5DA");
+			document.querySelector(".keywordInput").setAttribute("disabled",true);
 			$.ajax({
 				url:"<c:url value='/upJongCodeList'/>",
 				dataType:"json",
@@ -1023,22 +1060,28 @@
 				},
 				method:"get",
 				success:function(data){
-					let upJongHtml = "<ul>";
+					let upJongHtml = "<ul style='display:block;'>";
 					for(key in data){
 						let jsonInnerArr = data[key];
-						upJongHtml += "<li style=''>" + key + "</li>";
+						upJongHtml += "<li style='font-size:1.3em; font-weight:600; width:100%;'>" + key + "</li>";
+						upJongHtml += "<li style='display:block; width:100%;'>";
 						upJongHtml += "<div>";
-						upJongHtml += "<ul>";
+						upJongHtml += "<ul style='display:block;'>";
 						for(arrKey in jsonInnerArr){
-							upJongHtml += "<li>" + JSON.stringify(jsonInnerArr[arrKey].indsMclsNm) + "<li>";	
+							upJongHtml += "<li class='upJongCdLI' style='display:flex; justify-content:center; align-items:center; text-align:center; margin:0.5em 0.2em; height:2.6em; font-size:1.1em; border:1px solid #D4D8DB; width:calc((100% - 1px - (0.8em * 4)) / 5);'>";
+							upJongHtml += "<input type='radio' id='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' name='" + JSON.stringify(jsonInnerArr[arrKey].indsMclsCd).replaceAll("\"","") + "' value='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' onclick='upJongListClick(this)'/>";
+							upJongHtml += "<label for='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' style='cursor:pointer;'>";
+							upJongHtml += JSON.stringify(jsonInnerArr[arrKey].indsSclsNm).replaceAll("\"","");
+							upJongHtml += "</label>";
+							upJongHtml += "</li>";
 						}
 						upJongHtml += "</ul>";
 						upJongHtml += "</div>";
+						upJongHtml += "</li>";
 						//alert(key);
 						//alert(JSON.stringify(data[key]));
 					}
 					upJongHtml += "</ul>";
-					alert(upJongHtml);
 					document.getElementById("upJongList").innerHTML = upJongHtml;
 				},
 				error:function(data){
@@ -1054,6 +1097,17 @@
 					})
 				}	
 		);
+		
+		let keywordInput = () => {
+			document.querySelector("#upJongList input[data-select='Y']").value;
+			document.querySelector(".upjong_select").innerText = document.querySelector("#upJongList input[data-select='Y']").nextSibling.innerText;
+			document.querySelector(".upjong_select").dataset.keyword = document.querySelector("#upJongList input[data-select='Y']").value;
+			closeModal();
+		}
+		
+		document.querySelector(".keywordInput").addEventListener("click", function(){
+			keywordInput()
+		});
     </script>
 </body>
 </html>
