@@ -337,6 +337,21 @@
         	font-size: 2em;
         }
         
+        #dongAvg{
+        	display:flex;
+        	align-items: center;
+        	justify-content: center;
+        	position: absolute;
+        	top:7em;
+        	background-color: #EDF0F4;
+        	z-index: 700;
+        	left: 42%;
+        	height: 4em;
+        	border-radius: 2em;
+        	color: white;
+        	width: 35em;
+        }
+        
         .upjongSearch{
         	font-size:1.5em;
         	color:black;
@@ -702,8 +717,7 @@
 	   			<input type="file" id="" name="excelFile"/>
    				<button type="submit">업로드</button>
    			</form> --%>
-   			<input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'" style="display: none;"/>
-   			<!-- 새로고침시 실행되는 에러 해결 -->
+   			<%-- <input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'" style="display: none;"/> --%>
     	</div>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
@@ -712,6 +726,8 @@
     		<!-- 지도타입 컨트롤 div 입니다 -->
     		<div class="location">
     			<span id="centerAddr"></span>
+    		</div>
+    		<div id="dongAvg">
     		</div>
     		<div class="map_search">
 	    		<input type="text" id="juso" placeholder="주소로 검색하세요."/>
@@ -908,18 +924,22 @@
 						var positions = [];					
 
 						setMarkers(map);
-						
 						markers = [];
 						
-						for(key in data) {
-						    //alert(data[key].bizesNm);
+						let storeListInDongJson = JSON.parse(data.storeListInDong);
+						let dongAvg = JSON.parse(data.dongAvg);
+												
+						for(key in storeListInDongJson) {
 						    positions.push({
-						    	content: '<div>' + data[key].bizesNm +'</div>'
-						    			+ '<div>' + data[key].lnoAdr +'</div>',
-						    	latlng : new kakao.maps.LatLng(data[key].lat, data[key].lon) 
+						    	content: '<div>' + storeListInDongJson[key].bizesNm +'</div>'
+						    			+ '<div>' + storeListInDongJson[key].lnoAdr +'</div>',
+						    	latlng : new kakao.maps.LatLng(storeListInDongJson[key].lat, storeListInDongJson[key].lon) 
 						    });
 						}
 						
+						/* document.elementById("dongAvg").style.s */
+						let avgSpan = "<span style='display:block; color: black; font-size: 2em; font-weight:600;'>월평균 추정매출은 <span style='color:red;'> " + dongAvg.saleAmt + "</span> 만원 입니다.</span>"; 
+						document.getElementById("dongAvg").innerHTML = avgSpan;
 						//마커 배열 생성 예제
 						//{
 					    //    content: '<div>카카오</div>', 

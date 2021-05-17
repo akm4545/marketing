@@ -3,6 +3,7 @@ package marketing.main.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,6 @@ public class MainController{
 	public String search(@RequestParam("key") String key, @RequestParam("code") String code,
 			@RequestParam("upJongKey") String upJongKey) throws Exception {
 		String jusoCodeNum = ""; //주소 코드
-		//String upjongCode = "";
 		
 		String[] jusoArr = key.split(" ");
 		
@@ -65,10 +65,14 @@ public class MainController{
 		//Json List로 변환 참고 코드
 		//List<StoreVO> storeVOS = hangjungCodeService.storeListInDong(jusoCodeNum);
 		//System.out.println("최종 반환 json" + storeVOS.toString());
-		upJongKey = upJongCodeListService.getCopyUpJongCode(upJongKey);
-		hangjungCodeService.storeListInDongAvg(jusoCodeNum, upJongKey);
+		Map<String,String> storeMap = new HashMap<String, String>(); 
 		
-		return hangjungCodeService.storeListInDong(jusoCodeNum, code).toString();
+		upJongKey = upJongCodeListService.getCopyUpJongCode(upJongKey);
+		
+		storeMap.put("dongAvg", hangjungCodeService.storeListInDongAvg(jusoCodeNum, upJongKey).toString());
+		storeMap.put("storeListInDong", hangjungCodeService.storeListInDong(jusoCodeNum, code).toString());
+
+		return new Gson().toJson(storeMap).toString();
 	}
 	
 	@ResponseBody
@@ -77,7 +81,6 @@ public class MainController{
 		Map<String,List<UpJongVO>> upJongListMap = upJongCodeListService.getUpjongList(upJongCode);
 		
 		String upJongListJson = new Gson().toJson(upJongListMap);
-		System.out.println(upJongListJson);
 		
 		return upJongListJson;
 	}

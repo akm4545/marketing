@@ -13,6 +13,6 @@ public interface MainService {
 
 	String searchUpjongCode(int upjongIndex, String upjongCode)throws Exception;
 	
-	void storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception;
+	JsonObject storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception;
 	
 }

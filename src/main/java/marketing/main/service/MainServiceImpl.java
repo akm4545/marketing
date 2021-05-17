@@ -228,10 +228,10 @@ public class MainServiceImpl implements MainService{
 	}
 	
 	@Override
-	public void storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception {
+	public JsonObject storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception {
 		StringBuilder urlBuilder = new StringBuilder("https://sg.sbiz.or.kr/godo/getAvgAmtInfo.json"); /*URL*/
 		
-		urlBuilder.append("?" + URLEncoder.encode("admiCd","UTF-8") + "=" + jusoCodeNum.replace("\"", "").substring(0,7)); /*요청 분류*/
+		urlBuilder.append("?" + URLEncoder.encode("admiCd","UTF-8") + "=" + jusoCodeNum.replace("\"", "").substring(0,8)); /*요청 분류*/
 		urlBuilder.append("&" + URLEncoder.encode("upjongCd","UTF-8") + "=" + upJongKey); /*행정동*/
 		urlBuilder.append("&" + URLEncoder.encode("simpleLoc","UTF-8") + "=dsad+dasd+dsad" ); /*상권업종 소분류코드*/
         
@@ -264,17 +264,17 @@ public class MainServiceImpl implements MainService{
         rd.close();
         conn.disconnect();
         
-        //JsonObject storeJson = new Gson().fromJson(sb.toString(), JsonObject.class);
+        JsonObject dongAvgJson = new Gson().fromJson(sb.toString(), JsonObject.class);
+        JsonObject latelyDongAvgJson = null;
         
-        System.out.println(sb.toString());
+        try {
+        	JsonArray dongAvgJsonArr = (JsonArray) dongAvgJson.get("annualSales");        	
+        	latelyDongAvgJson = (JsonObject) dongAvgJsonArr.get(0);
+        }catch (ClassCastException e) {
+			latelyDongAvgJson = new Gson().fromJson("{\"saleAmt\":\"0\"}", JsonObject.class);
+		}
         
-        //재귀함수 안쓰고 고정 깊이를 가진 Jons객체에서 꺼내오기
-        //storeJson = (JsonObject) storeJson.get("body");
-        //JsonArray storeJsonArr = (JsonArray) storeJson.get("items");
-        
-        //Type type = new TypeToken<ArrayList<StoreVO>>(){}.getType();
-        //List<StoreVO> storeVOS = new Gson().fromJson(storeJsonArr.toString(), type);
-        
+        return latelyDongAvgJson;
 	}
 	
 	//깊이가 고정이지 않은 코드를 위한 재귀함수 힌트 
