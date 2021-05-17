@@ -324,11 +324,11 @@
         	top:2em;
         	background-color: #000;
         	z-index: 700;
-        	left: 45%;
+        	left: 42%;
         	height: 4em;
         	border-radius: 2em;
         	color: white;
-        	width: 25em;
+        	width: 33em;
         }
         
         .location span{
@@ -338,13 +338,13 @@
         }
         
         #dongAvg{
-        	display:flex;
+        	display:none;
         	align-items: center;
         	justify-content: center;
         	position: absolute;
         	top:7em;
         	background-color: #EDF0F4;
-        	z-index: 700;
+        	z-index: 0;
         	left: 42%;
         	height: 4em;
         	border-radius: 2em;
@@ -434,7 +434,7 @@
         	background-color: black;
         	width: 98.9vw;
         	height: 100vh;
-        	/* z-index: 1200; */
+        	z-index: 0;
         	opacity: 0.8;
         }
         
@@ -494,6 +494,18 @@
         	height: auto;
         	padding: 1em;
         	max-height: 20em;
+        }
+        
+        .loading_gif{
+        	display: inline-block;
+        	z-index: 0;
+        	position: absolute;
+        	top:30%;
+        	left: 45%;
+        }
+        
+        #jusoBtn{
+        	cursor: pointer;
         }
         
 		/* 카카오 api */
@@ -593,6 +605,9 @@
 			<input type="button" class="keywordInput" value="확인" disabled/>
 		</div>
 	</div>
+	<div class="loading_gif">
+		<img src='<c:url value="/images/tip/Wedges.gif"/>'/>
+	</div>
 	<div class="modal_back">
 	</div>
     <div class="nav">
@@ -631,10 +646,10 @@
     			</ul>
     		</div>
     		<div style="display:content !important;">
-				<input type="text" name="dong" placeholder="동단위로 검색하세요."/>	
+				<input type="text" name="dong" id="juso" placeholder="동단위로 검색하세요."/>	
     		</div>
     		<div>
-				<button type="button"><i class="fas fa-search"></i></button>
+				<button type="button" id="jusoBtn"><i class="fas fa-search"></i></button>
     		</div>
     	</div>
     	<div class="box">
@@ -650,56 +665,56 @@
    			<div class="icon">
    				<ul>
    					<li>
-   						<input type="radio" name="" id="icon_list1">
+   						<input type="radio" name="" id="icon_list1" value="Q">
    						<label for="icon_list1">
    							<i class="fas fa-utensils"></i>
    							<span class="icon_word">숙박·음식</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list2">
+   						<input type="radio" name="" id="icon_list2" value="F">
    						<label for="icon_list2">
    							<i class="fas fa-tools"></i>
    							<span class="icon_word">수리·개인서비스</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list3">
+   						<input type="radio" name="" id="icon_list3" value="C">
    						<label for="icon_list3">
    							<i class="fas fa-calculator"></i>
    							<span class="icon_word">도·소매</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list4">
+   						<input type="radio" name="" id="icon_list4" value="M">
    						<label for="icon_list4">
    							<i class="fas fa-table-tennis"></i>
    							<span class="icon_word">예술·스포츠·여가</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list5">
+   						<input type="radio" name="" id="icon_list5" value="R">
    						<label for="icon_list5">
    							<i class="fas fa-book-open"></i>
    							<span class="icon_word">교육</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list6">
+   						<input type="radio" name="" id="icon_list6" value="U">
    						<label for="icon_list6">
    							<i class="fas fa-building"></i>
    							<span class="icon_word">시설관리·임대</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list7">
+   						<input type="radio" name="" id="icon_list7" value="L">
    						<label for="icon_list7">
    							<i class="fas fa-laptop-house"></i>
    							<span class="icon_word">부동산</span>
    						</label>
    					</li>
    					<li>
-   						<input type="radio" name="" id="icon_list8">
+   						<input type="radio" name="" id="icon_list8" value="I">
    						<label for="icon_list8">
    							<i class="fas fa-robot"></i>
    							<span class="icon_word">과학·기술</span>
@@ -728,10 +743,6 @@
     			<span id="centerAddr"></span>
     		</div>
     		<div id="dongAvg">
-    		</div>
-    		<div class="map_search">
-	    		<input type="text" id="juso" placeholder="주소로 검색하세요."/>
-	    		<input type="button" class="selected_btn" id="juso_btn" value="검색"/>
     		</div>
     		<div class="custom_typecontrol radius_border">
         		<span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
@@ -893,7 +904,7 @@
 		    }            
 		}
 		
-		let jusoBtn = document.getElementById("juso_btn");
+		let jusoBtn = document.getElementById("jusoBtn");
 		
 		let jusoFuc = () => {
 			let juso = document.getElementById("juso").value;
@@ -901,14 +912,31 @@
 			ps.keywordSearch(juso, placesSearchCB);
 		}
 		
+		document.getElementById("juso").addEventListener('keypress',function(e){
+			if (e.key === 'Enter'){
+				jusoFuc();
+			}	
+		});
+		
 		jusoBtn.addEventListener("click", jusoFuc);
 		
 		let marketing = document.getElementById("marketing_search");
+		
+		let loading = () => {
+			document.querySelector(".modal_back").style.setProperty("z-index","1200");
+			document.querySelector(".loading_gif").style.setProperty("z-index","1300");
+		}
+		
+		let closeLoading = () => {
+			document.querySelector(".modal_back").style.setProperty("z-index","0");
+			document.querySelector(".loading_gif").style.setProperty("z-index","0");
+		}
 		
 		let searchFuc = () => {
 			let upJongKeyword = document.querySelector(".upjong_select").innerText;
 			let upJongSmCode = document.querySelector(".upjong_select").dataset['keyword'];
 			if(upJongKeyword !== "업종 선택"){
+				loading();
 				centerAddr = document.getElementById("centerAddr").innerText;
 				$.ajax({
 					url:"<c:url value='/search'/>",
@@ -937,7 +965,8 @@
 						    });
 						}
 						
-						/* document.elementById("dongAvg").style.s */
+						document.querySelector("#dongAvg").style.setProperty("display","flex");
+						document.querySelector("#dongAvg").style.setProperty("z-index","800");
 						let avgSpan = "<span style='display:block; color: black; font-size: 2em; font-weight:600;'>월평균 추정매출은 <span style='color:red;'> " + dongAvg.saleAmt + "</span> 만원 입니다.</span>"; 
 						document.getElementById("dongAvg").innerHTML = avgSpan;
 						//마커 배열 생성 예제
@@ -980,7 +1009,7 @@
 						        infowindow.close();
 						    };
 						}
-						
+						closeLoading();
 					},
 					error:function(data, textStatus, errorThrown){
 						alert(textStatus);
@@ -999,14 +1028,63 @@
 			document.querySelector(".upjongSearch").style.setProperty("z-index","1300");
 			document.querySelector(".modal_back").style.setProperty("z-index","1200");
 			document.querySelector(".btnNext").style.setProperty("z-index","2000");
+			if(document.querySelector("#upJongList input[data-select='Y']") === null){
+				document.querySelector(".keywordInput").style.setProperty("background-color","#D2D5DA");
+				document.querySelector(".keywordInput").setAttribute("disabled",true);				
+			}else{
+				document.querySelector(".keywordInput").style.setProperty("background-color","#4668D6");
+				document.querySelector(".keywordInput").removeAttribute("disabled");
+			}
+			
+		};
+		
+		let upJongList = (upJongCode) => {
 			document.querySelector(".keywordInput").style.setProperty("background-color","#D2D5DA");
 			document.querySelector(".keywordInput").setAttribute("disabled",true);
+			$.ajax({
+				url:"<c:url value='/upJongCodeList'/>",
+				dataType:"json",
+				//contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				data:{
+					upJongCode : upJongCode
+				},
+				method:"get",
+				success:function(data){
+					let upJongHtml = "<ul style='display:block;'>";
+					for(key in data){
+						let jsonInnerArr = data[key];
+						upJongHtml += "<li style='font-size:1.3em; font-weight:600; width:100%;'>" + key + "</li>";
+						upJongHtml += "<li style='display:block; width:100%;'>";
+						upJongHtml += "<div>";
+						upJongHtml += "<ul style='display:block;'>";
+						for(arrKey in jsonInnerArr){
+							upJongHtml += "<li class='upJongCdLI' style='display:flex; justify-content:center; align-items:center; text-align:center; margin:0.5em 0.2em; height:2.6em; font-size:1.1em; border:1px solid #D4D8DB; width:calc((100% - 1px - (0.8em * 4)) / 5);'>";
+							upJongHtml += "<input type='radio' id='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' name='" + JSON.stringify(jsonInnerArr[arrKey].indsMclsCd).replaceAll("\"","") + "' value='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' onclick='upJongListClick(this)'/>";
+							upJongHtml += "<label for='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' style='cursor:pointer;'>";
+							upJongHtml += JSON.stringify(jsonInnerArr[arrKey].indsSclsNm).replaceAll("\"","");
+							upJongHtml += "</label>";
+							upJongHtml += "</li>";
+						}
+						upJongHtml += "</ul>";
+						upJongHtml += "</div>";
+						upJongHtml += "</li>";
+						//alert(key);
+						//alert(JSON.stringify(data[key]));
+					}
+					upJongHtml += "</ul>";
+					document.getElementById("upJongList").innerHTML = upJongHtml;
+				},
+				error:function(data){
+					console.log("에러가 발생했습니다.");
+				}
+			})
 		};
 		
 		document.querySelectorAll(".box input[type=radio]").forEach(
 			(icon) => {
-				icon.addEventListener('click', function(){
+				icon.addEventListener('click', function(e){
 					showModal();
+					upJongList(e.target.value);
 				})
 			}		
 		);
@@ -1068,48 +1146,6 @@
 			document.querySelector(".keywordInput").style.setProperty("background-color","#4668D6");
 			document.querySelector(".keywordInput").removeAttribute("disabled");
 		}
-		
-		let upJongList = (upJongCode) => {
-			document.querySelector(".keywordInput").style.setProperty("background-color","#D2D5DA");
-			document.querySelector(".keywordInput").setAttribute("disabled",true);
-			$.ajax({
-				url:"<c:url value='/upJongCodeList'/>",
-				dataType:"json",
-				//contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-				data:{
-					upJongCode : upJongCode
-				},
-				method:"get",
-				success:function(data){
-					let upJongHtml = "<ul style='display:block;'>";
-					for(key in data){
-						let jsonInnerArr = data[key];
-						upJongHtml += "<li style='font-size:1.3em; font-weight:600; width:100%;'>" + key + "</li>";
-						upJongHtml += "<li style='display:block; width:100%;'>";
-						upJongHtml += "<div>";
-						upJongHtml += "<ul style='display:block;'>";
-						for(arrKey in jsonInnerArr){
-							upJongHtml += "<li class='upJongCdLI' style='display:flex; justify-content:center; align-items:center; text-align:center; margin:0.5em 0.2em; height:2.6em; font-size:1.1em; border:1px solid #D4D8DB; width:calc((100% - 1px - (0.8em * 4)) / 5);'>";
-							upJongHtml += "<input type='radio' id='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' name='" + JSON.stringify(jsonInnerArr[arrKey].indsMclsCd).replaceAll("\"","") + "' value='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' onclick='upJongListClick(this)'/>";
-							upJongHtml += "<label for='" + JSON.stringify(jsonInnerArr[arrKey].indsSclsCd).replaceAll("\"","") + "' style='cursor:pointer;'>";
-							upJongHtml += JSON.stringify(jsonInnerArr[arrKey].indsSclsNm).replaceAll("\"","");
-							upJongHtml += "</label>";
-							upJongHtml += "</li>";
-						}
-						upJongHtml += "</ul>";
-						upJongHtml += "</div>";
-						upJongHtml += "</li>";
-						//alert(key);
-						//alert(JSON.stringify(data[key]));
-					}
-					upJongHtml += "</ul>";
-					document.getElementById("upJongList").innerHTML = upJongHtml;
-				},
-				error:function(data){
-					console.log("에러가 발생했습니다.");
-				}
-			})
-		};
 		
 		document.querySelectorAll(".head ul input[type=radio]").forEach(
 				(upJongRadio) => {
