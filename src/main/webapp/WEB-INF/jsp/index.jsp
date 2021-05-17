@@ -623,7 +623,7 @@
             	</a>
             </li>
             <li>
-            	<a href="" class="guide">
+            	<a href="javascript:guideDownload()" class="guide">
             		<span>사용자 가이드</span>
             	</a>
             </li>
@@ -1165,6 +1165,22 @@
 		document.querySelector(".keywordInput").addEventListener("click", function(){
 			keywordInput()
 		});
+		
+		let guideDownload = () => {
+			location.href="<c:url value='/guideDownload'/>";
+			/* $.ajax({
+				url:"<c:url value='/guideDownload'/>",
+				method:"get",
+				success:function(data){
+					
+				},
+				error:function(data,textStatus, errorThrown){
+					alert(textStatus);
+					alert(errorThrown);
+					alert("에러가 발생했습니다.");
+				}
+			}); */
+		}
     </script>
 </body>
 </html>
