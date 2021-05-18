@@ -508,8 +508,75 @@
         	cursor: pointer;
         }
         
+        .report{
+        	z-index: 800;
+        	display: none;
+        	background-color: white;
+        	position: absolute;
+        	top:9.5em;
+        	font-size: 1.5em;
+        	left: 28em;
+        	height: auto;
+        	padding: 1.5em;
+        	border-radius: 1em;
+        }
+        
+        .reportKeyword{
+        	border: 1px solid black;
+        	background: #FAFBFC;
+        	display: inline-block;
+        	padding: 1em; 
+        	width: 93%;
+        }
+        
+        .reportKeyword ul {
+        	display:flex;
+        	justify-content:space-around;
+        	list-style: "▶";
+        	list-style-position: inside;
+        }
+        
+        .reportKeyword ul li::marker{
+        	margin-left: 0.5em;
+        }
+        
+        .avg{
+        	margin: 1em 0;
+        }
+        
+        .avgSpan{
+        	font-size: 1.3em;
+        	font-weight: 600;
+        	border-bottom: 1px solid black;
+        	margin-bottom: 1em;
+        }
+        
+        .avgArrow{
+        	display: flex;
+        	justify-content:space-evenly;
+        }
+        
+        .avgClose{
+        	float: right;
+        }
+        
+        .showReport{
+        	display:none;
+        	/* display: block; */
+        	z-index: 800;
+        	position: absolute;
+        	background-color: white;
+        	top:15em;
+        	left: 42em;
+        	border-radius: 1em;
+        }
+        
+        .showReport img{
+        	transform:rotate(180deg);
+        }
+        
 		/* 카카오 api */
-        .map_wrap {position:relative;overflow:hidden;width:100%;height:700px;}
+        .map_wrap {position:relative;overflow:hidden;width:100%;height:800px;}
 		.radius_border{border:1px solid #919191;border-radius:5px;}     
 		.custom_typecontrol {position:absolute;top:10px;right:10px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
 		.custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
@@ -623,7 +690,7 @@
             	</a>
             </li>
             <li>
-            	<a href="javascript:guideDownload()" class="guide">
+            	<a href="<c:url value='/guideDownload'/>" class="guide">
             		<span>사용자 가이드</span>
             	</a>
             </li>
@@ -734,6 +801,57 @@
    			</form> --%>
    			<%-- <input type="button" value="csv파일 DB입력" onclick="javascript:location.href='<c:url value="/csvToDB"/>'" style="display: none;"/> --%>
     	</div>
+    	<div class="showReport">
+    		<img src="<c:url value='/images/tip/color_arrow.svg'/>"/>
+    	</div>
+    	<div class="report">
+    		<div>
+    			<a href="javascript:void(0)" class="avgClose">
+					<img src="<c:url value='/images/tip/icon_close_b.svg'/>"/>
+				</a>
+    		</div>
+    		<div class="reportKeyword" id="reportKeyword">
+    		</div>
+    		<div class="avg">
+    			<div class="avgSpan">
+    				<i class="fas fa-money-bill"></i>
+    				<span>월평균 추정매출은 </span> 
+    				<span class="avgSales" style="color: red; font-size: 1.5em;"></span> 
+    				<span> 만원 입니다.</span>
+    			</div>
+    			<div class="avgSpan avgArrow">
+    				<div>
+	    				<i class="fas fa-arrow-down"></i>
+	    				<span>최저</span>    				
+    				</div>
+    				<div>
+	    				<i class="fas fa-arrow-up"></i>
+	    				<span>최고</span>    				
+    				</div>
+    			</div>
+    			<div class="avgSpan avgArrow">
+    				<div>
+	    				<span class="minAmt" style="color: blue;"></span>    				
+    				</div>
+    				<div>
+	    				<span class="maxAmt" style="color: red;"></span>    				
+    				</div>
+    			</div>
+    		</div>
+    		<div class="top">
+    			<div class="avgSpan">
+    				<i class="fas fa-balance-scale"></i>
+    				<span class="si" style="color: red; font-size: 1.5em;"></span>
+    				<span style="color: red; font-size: 1.5em;">주요 매출</span>
+    				<span>정보입니다.</span>
+    			</div>
+    			<div class="topFive">
+    			</div>
+    		</div>
+    	</div>
+    	<a href="">
+    		<img src="<c:url value='/images/tip/color_arrow.svg'/>"/>
+    	</a>
     	<!-- <div>상권현황</div>
     	<div>상권분석</div> -->
 		<div class="map_wrap">
@@ -932,6 +1050,16 @@
 			document.querySelector(".loading_gif").style.setProperty("z-index","0");
 		}
 		
+		let reportClose = () => {
+			document.querySelector(".report").style.setProperty("display","none");
+			document.querySelector(".showReport").style.setProperty("display","block");
+		}
+		
+		let reportShow = () => {
+			document.querySelector(".report").style.setProperty("display","block");
+			document.querySelector(".showReport").style.setProperty("display","none");
+		}
+		
 		let searchFuc = () => {
 			let upJongKeyword = document.querySelector(".upjong_select").innerText;
 			let upJongSmCode = document.querySelector(".upjong_select").dataset['keyword'];
@@ -956,6 +1084,7 @@
 						
 						let storeListInDongJson = JSON.parse(data.storeListInDong);
 						let dongAvg = JSON.parse(data.dongAvg);
+						let topFive = JSON.parse(data.topFive);
 												
 						for(key in storeListInDongJson) {
 						    positions.push({
@@ -965,10 +1094,10 @@
 						    });
 						}
 						
-						document.querySelector("#dongAvg").style.setProperty("display","flex");
+						/* document.querySelector("#dongAvg").style.setProperty("display","flex");
 						document.querySelector("#dongAvg").style.setProperty("z-index","800");
 						let avgSpan = "<span style='display:block; color: black; font-size: 2em; font-weight:600;'>월평균 추정매출은 <span style='color:red;'> " + dongAvg.saleAmt + "</span> 만원 입니다.</span>"; 
-						document.getElementById("dongAvg").innerHTML = avgSpan;
+						document.getElementById("dongAvg").innerHTML = avgSpan; */
 						//마커 배열 생성 예제
 						//{
 					    //    content: '<div>카카오</div>', 
@@ -1010,8 +1139,46 @@
 						    };
 						}
 						closeLoading();
+						
+						reportShow();
+						
+						let reportKeyword = "<ul>";
+						reportKeyword += "<li>" + document.getElementById("centerAddr").innerText + "</li>";
+						reportKeyword += "<li>" + document.querySelector(".upjong_select").innerText + "</li>";
+						reportKeyword += "</ul>";
+						
+						document.querySelector(".reportKeyword").innerHTML = reportKeyword;
+						document.querySelector(".avgSales").innerText = dongAvg.saleAmt;
+						document.querySelector(".minAmt").innerText = dongAvg.minAmt + "만원";
+						document.querySelector(".maxAmt").innerText = dongAvg.maxAmt + "만원";
+						document.querySelector(".si").innerText = centerAddr.split(" ")[0];
+						
+						let row = 4;
+						
+						let avgTable = "<table style='border-spacing:5px 10px; border-collapse:collapse;'>";
+						avgTable += "<tr style='font-weight:600;'>";
+						avgTable += "<td style='padding:1em 1em; border-bottom:2px solid black;'>동</td>";
+						avgTable += "<td style='padding:1em 1em; border-bottom:2px solid black;'>매출(만원)</td>";
+						avgTable += "<td style='padding:1em 1em; border-bottom:2px solid black;'>업소수(개)</td>";
+						avgTable += "<td style='padding:1em 1em; border-bottom:2px solid black;'>유동인구(명)</td>";
+						avgTable += "</tr>";
+						
+						for(let j=0; j<topFive.length; j++){
+							avgTable += "<tr>";
+							avgTable += "<td style='color:#4568D5; border-bottom:1px solid #D2D5DA; padding:1em 0;'>" + topFive[j].megaNm + " " + topFive[j].ctyNm + " " + topFive[j].admiNm + "</td>";
+							avgTable += "<td style='text-align:center; border-bottom:1px solid #D2D5DA; padding:1em 0;'>" + topFive[j].saleAmt + "</td>";
+							avgTable += "<td style='text-align:center; border-bottom:1px solid #D2D5DA; padding:1em 0;'>" + topFive[j].storeCnt + "</td>";
+							avgTable += "<td style='text-align:center; border-bottom:1px solid #D2D5DA; padding:1em 0;'>" + topFive[j].dayAvg + "</td>";
+							avgTable += "</tr>";
+						}
+						
+						avgTable += "</table>";
+						document.querySelector(".topFive").innerHTML = avgTable;
+						
+						console.log(topFive);
 					},
 					error:function(data, textStatus, errorThrown){
+						closeLoading();
 						alert(textStatus);
 						alert(errorThrown);
 						alert("실패" + data);
@@ -1163,24 +1330,16 @@
 		}
 		
 		document.querySelector(".keywordInput").addEventListener("click", function(){
-			keywordInput()
+			keywordInput();
 		});
 		
-		let guideDownload = () => {
-			location.href="<c:url value='/guideDownload'/>";
-			/* $.ajax({
-				url:"<c:url value='/guideDownload'/>",
-				method:"get",
-				success:function(data){
-					
-				},
-				error:function(data,textStatus, errorThrown){
-					alert(textStatus);
-					alert(errorThrown);
-					alert("에러가 발생했습니다.");
-				}
-			}); */
-		}
+		document.querySelector(".avgClose").addEventListener("click", function(){
+			reportClose();
+		});
+		
+		document.querySelector(".showReport").addEventListener("click",function(){
+			reportShow();
+		})
     </script>
 </body>
 </html>

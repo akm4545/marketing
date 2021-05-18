@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import marketing.main.service.MainServiceImpl;
 import marketing.main.service.UpJongCodeListService;
@@ -69,7 +71,20 @@ public class MainController{
 		
 		upJongKey = upJongCodeListService.getCopyUpJongCode(upJongKey);
 		
-		storeMap.put("dongAvg", hangjungCodeService.storeListInDongAvg(jusoCodeNum, upJongKey).toString());
+		JsonObject dongAvgJson = hangjungCodeService.storeListInDongAvg(jusoCodeNum, upJongKey);
+		JsonObject latelyDongAvgJson = null;
+		
+        try {
+        	JsonArray dongAvgJsonArr = (JsonArray) dongAvgJson.get("annualSales");        	
+        	latelyDongAvgJson = (JsonObject) dongAvgJsonArr.get(0);
+        }catch (ClassCastException e) {
+			latelyDongAvgJson = new Gson().fromJson("{\"saleAmt\":\"0\"}", JsonObject.class);
+		}
+        
+        JsonArray topFiveJson = (JsonArray) dongAvgJson.get("topFive");
+        
+		storeMap.put("dongAvg", latelyDongAvgJson.toString());
+		storeMap.put("topFive", topFiveJson.toString());
 		storeMap.put("storeListInDong", hangjungCodeService.storeListInDong(jusoCodeNum, code).toString());
 
 		return new Gson().toJson(storeMap).toString();

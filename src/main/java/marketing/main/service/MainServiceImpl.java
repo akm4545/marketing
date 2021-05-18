@@ -13,6 +13,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.security.SecureRandom; 
+import java.security.cert.X509Certificate; 
+import javax.net.ssl.HttpsURLConnection; 
+import javax.net.ssl.SSLContext; 
+import javax.net.ssl.TrustManager; 
+import javax.net.ssl.X509TrustManager;
+
+
 @Service("hangjungCodeService")
 public class MainServiceImpl implements MainService{
 	JsonObject jusoJSON;
@@ -229,6 +237,7 @@ public class MainServiceImpl implements MainService{
 	
 	@Override
 	public JsonObject storeListInDongAvg(String jusoCodeNum, String upJongKey) throws Exception {
+
 		StringBuilder urlBuilder = new StringBuilder("https://sg.sbiz.or.kr/godo/getAvgAmtInfo.json"); /*URL*/
 		
 		urlBuilder.append("?" + URLEncoder.encode("admiCd","UTF-8") + "=" + jusoCodeNum.replace("\"", "").substring(0,8)); /*요청 분류*/
@@ -238,6 +247,9 @@ public class MainServiceImpl implements MainService{
         URL url = new URL(urlBuilder.toString());
         
         System.out.println(url.toString());
+        
+        //ssl인증서 회피
+        sslTrustAllCerts();
         
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         
@@ -264,17 +276,29 @@ public class MainServiceImpl implements MainService{
         rd.close();
         conn.disconnect();
         
-        JsonObject dongAvgJson = new Gson().fromJson(sb.toString(), JsonObject.class);
-        JsonObject latelyDongAvgJson = null;
-        
-        try {
-        	JsonArray dongAvgJsonArr = (JsonArray) dongAvgJson.get("annualSales");        	
-        	latelyDongAvgJson = (JsonObject) dongAvgJsonArr.get(0);
-        }catch (ClassCastException e) {
-			latelyDongAvgJson = new Gson().fromJson("{\"saleAmt\":\"0\"}", JsonObject.class);
-		}
-        
-        return latelyDongAvgJson;
+        return new Gson().fromJson(sb.toString(), JsonObject.class);
+	}
+	
+	//SSL 인증서 회피 코드 추후 분석 필요
+	public void sslTrustAllCerts(){ 
+		TrustManager[] trustAllCerts = new TrustManager[] { 
+			new X509TrustManager() { 
+				public X509Certificate[] getAcceptedIssuers() { 
+					return null; 
+				}
+					
+				public void checkClientTrusted(X509Certificate[] certs, String authType) { 
+					} public void checkServerTrusted(X509Certificate[] certs, String authType) { } 
+				} 
+		};
+		SSLContext sc; 
+		try { 
+			sc = SSLContext.getInstance("SSL"); 
+			sc.init(null, trustAllCerts, new SecureRandom()); 
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); 
+		} catch(Exception e) { 
+			e.printStackTrace(); 
+		} 
 	}
 	
 	//깊이가 고정이지 않은 코드를 위한 재귀함수 힌트 
